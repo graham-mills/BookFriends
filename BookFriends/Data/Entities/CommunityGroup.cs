@@ -15,5 +15,7 @@ namespace BookFriends.Data.Entities
         public String Name { get; set; }
         public String Description { get; set; }
         public virtual ICollection<CommunityMember> CommunityMembers { get; set; }
+
+        public int GetMemberCount() => CommunityMembers != null ? CommunityMembers.Count : 0;
     }
 }

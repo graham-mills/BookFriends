@@ -69,3 +69,12 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* BookFriends custom
+-------------------------------------------------- */
+img.bf-thumb {
+    background-color: #F0F0F0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}

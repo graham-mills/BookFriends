@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookFriends.Data;
 using BookFriends.ViewModels;
+using BookFriendsDataAccess;
+using BookFriendsDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -12,16 +13,15 @@ namespace BookFriends.Controllers
 {
     public class CommunitiesController : Controller
     {
-        private readonly BookFriendsDbContext _context;
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
+        private readonly IEntityRepository<CommunityGroup> _communityGroupRepo;
 
-
-        public CommunitiesController(ILogger<CommunitiesController> logger, IConfiguration configuration, BookFriendsDbContext context)
+        public CommunitiesController(ILogger<CommunitiesController> logger, IConfiguration configuration, IEntityRepository<CommunityGroup> communityGroupRepo)
         {
             _logger = logger;
-            _context = context;
             _configuration = configuration;
+            _communityGroupRepo = communityGroupRepo;
         }
 
         public IActionResult Index()
@@ -31,7 +31,7 @@ namespace BookFriends.Controllers
 
         public async Task<IActionResult> Browse()
         {
-            var viewModelBuilder = new BrowseCommunitiesViewModelBuilder(_logger, _configuration, _context);
+            var viewModelBuilder = new BrowseCommunitiesViewModelBuilder(_logger, _configuration, _communityGroupRepo);
             await Task.Run(viewModelBuilder.Build);
             return View(viewModelBuilder.CommunityListings);
         }

@@ -1,4 +1,5 @@
-﻿using BookFriends.Data;
+﻿using BookFriendsDataAccess;
+using BookFriendsDataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,15 +13,15 @@ namespace BookFriends.ViewModels
     {
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
-        private readonly BookFriendsDbContext _context;
+        private readonly IEntityRepository<CommunityGroup> _communityGroupRepo;
 
         public BrowseCommunitiesViewModel CommunityListings;
 
-        public BrowseCommunitiesViewModelBuilder(ILogger logger, IConfiguration configuration, BookFriendsDbContext context)
+        public BrowseCommunitiesViewModelBuilder(ILogger logger, IConfiguration configuration, IEntityRepository<CommunityGroup> communityGroupRepo)
         {
             _logger = logger;
             _configuration = configuration;
-            _context = context;
+            _communityGroupRepo = communityGroupRepo;
         }
 
         public void Build()
@@ -28,9 +29,7 @@ namespace BookFriends.ViewModels
             int communitiesToDisplay = _configuration.GetValue<int>(ConfigurationKeys.BrowseCommunitiesPaginationSize);
 
             CommunityListings = new BrowseCommunitiesViewModel();
-            CommunityListings.Communities.AddRange(
-                    _context.CommunityGroups.Take(communitiesToDisplay).ToList()
-                );
+            CommunityListings.Communities.AddRange( _communityGroupRepo.Get(take: communitiesToDisplay));
         }
 
     }

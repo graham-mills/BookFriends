@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookFriends.Data;
+using BookFriendsDataAccess;
+using BookFriendsDataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,7 @@ namespace BookFriends
         {
             services.AddControllersWithViews();
             services.AddDbContext<BookFriendsDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IEntityRepository<CommunityGroup>, EntityRepository<CommunityGroup>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

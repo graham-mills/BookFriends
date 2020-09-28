@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookFriends.Data.Entities
+namespace BookFriendsDataAccess.Entities
 {
     public class User
     {

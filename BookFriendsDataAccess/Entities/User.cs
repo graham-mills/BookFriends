@@ -16,7 +16,13 @@ namespace BookFriendsDataAccess.Entities
         [Required]
         [StringLength(maximumLength:30, MinimumLength = 1)]
         public String DisplayName { get; set; }
-        public virtual ICollection<CommunityMember> Memberships { get; set; }
-        public virtual ICollection<OwnedBook> OwnedBooks { get; set; }
+        public virtual List<CommunityMember> Memberships { get; set; }
+        public virtual List<OwnedBook> OwnedBooks { get; set; }
+
+        public User()
+        {
+            Memberships = new List<CommunityMember>();
+            OwnedBooks = new List<OwnedBook>();
+        }
     }
 }

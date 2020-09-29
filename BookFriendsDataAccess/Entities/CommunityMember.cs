@@ -25,6 +25,11 @@ namespace BookFriendsDataAccess.Entities
         public CommunityGroup CommunityGroup { get; set; }
         [Required]
         public MembershipRole Role { get; set; }
-        public virtual ICollection<PooledBook> PooledBooks { get; set; }
+        public virtual List<PooledBook> PooledBooks { get; set; }
+
+        public CommunityMember()
+        {
+            PooledBooks = new List<PooledBook>();
+        }
     }
 }

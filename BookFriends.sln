@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookFriends", "BookFriends\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFriendsDataAccess", "BookFriendsDataAccess\BookFriendsDataAccess.csproj", "{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFriendsTest", "BookFriendsTest\BookFriendsTest.csproj", "{C5DBBC72-2856-4B82-81F5-D725750F6F89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5DBBC72-2856-4B82-81F5-D725750F6F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5DBBC72-2856-4B82-81F5-D725750F6F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5DBBC72-2856-4B82-81F5-D725750F6F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5DBBC72-2856-4B82-81F5-D725750F6F89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

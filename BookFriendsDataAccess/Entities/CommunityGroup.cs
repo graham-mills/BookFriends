@@ -14,7 +14,12 @@ namespace BookFriendsDataAccess.Entities
         [StringLength(100, MinimumLength = 10)]
         public String Name { get; set; }
         public String Description { get; set; }
-        public virtual ICollection<CommunityMember> CommunityMembers { get; set; }
+        public virtual List<CommunityMember> CommunityMembers { get; set; }
+
+        public CommunityGroup()
+        {
+            CommunityMembers = new List<CommunityMember>();
+        }
 
         public int GetMemberCount() => CommunityMembers != null ? CommunityMembers.Count : 0;
     }

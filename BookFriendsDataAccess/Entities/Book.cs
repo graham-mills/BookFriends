@@ -13,6 +13,11 @@ namespace BookFriendsDataAccess.Entities
         public String Name { get; set; }
         public String Series { get; set; }
         public String Publisher { get; set; }
-        public ICollection<Author> Authors { get; set; }
+        public List<Author> Authors { get; set; }
+
+        public Book()
+        {
+            Authors = new List<Author>();
+        }
     }
 }

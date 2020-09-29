@@ -29,10 +29,10 @@ namespace BookFriends.Controllers
             return RedirectToAction("Browse");
         }
 
-        public async Task<IActionResult> Browse()
+        public IActionResult Browse()
         {
             var viewModelBuilder = new BrowseCommunitiesViewModelBuilder(_logger, _configuration, _communityGroupRepo);
-            await Task.Run(viewModelBuilder.Build);
+            viewModelBuilder.Build();
             return View(viewModelBuilder.CommunityListings);
         }
 

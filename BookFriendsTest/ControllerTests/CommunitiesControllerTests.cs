@@ -31,6 +31,28 @@ namespace BookFriendsTest.ControllerTests
             entityFactory.CreateEntities();
         }
 
+        private void SetupMockConfiguration(int configuredPaginationAmount)
+        {
+            mockConfigurationSection.Setup(a => a.Value).Returns(configuredPaginationAmount.ToString());
+            mockConfiguration.Setup(c => c.GetSection(It.IsAny<String>())).Returns(mockConfigurationSection.Object);
+        }
+
+        private void SetupMockCommunityGroupRepo(IEnumerable<CommunityGroup> groupsInRepo, int expectedAmountToTake)
+        {
+            // Return correct amount of groups if correct amount are requested
+            mockCommunityGroupRepo.Setup(x => x.Get(
+                It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
+                It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
+                It.Is<int?>(t => t == expectedAmountToTake))
+            ).Returns(groupsInRepo.Take(expectedAmountToTake));
+            // Returns no groups if incorrect amount are requested
+            mockCommunityGroupRepo.Setup(x => x.Get(
+                It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
+                It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
+                It.Is<int?>(t => t != expectedAmountToTake))
+            ).Returns(groupsInRepo.Take(0));
+        }
+
         [SetUp]
         public void Setup()
         {
@@ -45,26 +67,23 @@ namespace BookFriendsTest.ControllerTests
             Assert.IsTrue(result.ActionName.Equals("Browse"));
         }
 
-        [Test]
-        public void Browse_ZeroCommunityRecords()
+        [TestCase(0, 4, 0)]
+        [TestCase(2, 0, 0)]
+        [TestCase(2, 1, 1)]
+        [TestCase(2, 2, 2)]
+        [TestCase(2, 3, 2)]
+        public void Browse(int paginationAmount, int groupsInRepo, int expectedGroupsReturned)
         {
             // Arrange
-            var communityGroups = new List<CommunityGroup>();
-            const int paginationAmount = 2;
-            mockConfigurationSection.Setup(a => a.Value).Returns(paginationAmount.ToString());
-            mockConfiguration.Setup(c => c.GetSection(It.IsAny<String>())).Returns(mockConfigurationSection.Object);
-
-            mockCommunityGroupRepo.Setup(x => x.Get(It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
-                                                    It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
-                                                    It.IsAny<int?>()
-                                                    )).Returns(communityGroups);
+            SetupMockConfiguration(paginationAmount);
+            SetupMockCommunityGroupRepo(entityFactory.CommunityGroups.Values.Take(groupsInRepo), paginationAmount);
 
             // Act
             var result = uut.Browse() as ViewResult;
 
             // Assert
             var viewModel = result.Model as BrowseCommunitiesViewModel;
-            Assert.AreEqual(0, viewModel.Communities.Count);
+            Assert.AreEqual(expectedGroupsReturned, viewModel.Communities.Count);
         }
     }
 }

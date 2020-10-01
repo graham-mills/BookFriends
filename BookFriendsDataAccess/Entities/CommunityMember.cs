@@ -7,25 +7,24 @@ using System.Threading.Tasks;
 
 namespace BookFriendsDataAccess.Entities
 {
+    [Table("CommunityMember")]
     public class CommunityMember
     {   
         public enum MembershipRole
         {
-            MEMBER    = 0,
-            MODERATOR = 1,
-            ADMIN     = 2,
-
-            FIRST  = MEMBER,
-            LAST   = ADMIN,
-            LENGTH = LAST + 1
+            Member    = 0,
+            Moderator = 1,
+            Admin     = 2
         }
         [Key]
         public Guid Id { get; set; }
         [Required]
-        public CommunityGroup CommunityGroup { get; set; }
+        public virtual User User { get; set; }
+        [Required]
+        public virtual CommunityGroup CommunityGroup { get; set; }
         [Required]
         public MembershipRole Role { get; set; }
-        public virtual List<PooledBook> PooledBooks { get; set; }
+        public virtual ICollection<PooledBook> PooledBooks { get; set; }
 
         public CommunityMember()
         {

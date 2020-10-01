@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace BookFriendsDataAccess.Entities
 {
-    [Table("OwnedBook")]
-    public class OwnedBook
+    [Table("AuthorBook")]
+    public class AuthorBook
     {
         [Key]
-        public Guid Id { get; set; }
-        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [ForeignKey("AuthorId")]
+        public virtual Author Author { get; set; }
         [ForeignKey("BookId")]
         public virtual Book Book { get; set; }
-        public Boolean Available { get; set; }
-        public String Notes { get; set; }
     }
 }

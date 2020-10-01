@@ -33,7 +33,7 @@ namespace BookFriends.Controllers
         {
             var viewModelBuilder = new BrowseCommunitiesViewModelBuilder(_logger, _configuration, _communityGroupRepo);
             viewModelBuilder.Build();
-            return View(viewModelBuilder.CommunityListings);
+            return View(viewModelBuilder.ViewModel);
         }
 
     }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookFriendsDataAccess.Entities
 {
+    [Table("Book")]
     public class Book
     {
         [Key]
@@ -13,11 +15,11 @@ namespace BookFriendsDataAccess.Entities
         public String Name { get; set; }
         public String Series { get; set; }
         public String Publisher { get; set; }
-        public List<Author> Authors { get; set; }
+        public virtual ICollection<AuthorBook> Authors { get; set; }
 
         public Book()
         {
-            Authors = new List<Author>();
+            Authors = new List<AuthorBook>();
         }
     }
 }

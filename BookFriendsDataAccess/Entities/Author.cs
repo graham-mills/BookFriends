@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookFriendsDataAccess.Entities
 {
+    [Table("Author")]
     public class Author
     {
         [Key]
@@ -17,5 +18,6 @@ namespace BookFriendsDataAccess.Entities
         [Required]
         [StringLength(100)]
         public String FirstNames { get; set; }
+        public virtual ICollection<AuthorBook> Books { get; set; }
     }
 }

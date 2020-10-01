@@ -18,21 +18,14 @@ namespace BookFriendsDataAccess
         public DbSet<CommunityMember> CommunityMembers { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<AuthorBook> AuthorBooks { get; set; }
         public DbSet<OwnedBook> OwnedBooks { get; set; }
         public DbSet<PooledBook> PooledBooks { get; set; }
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Override default pluralisation of tables
-            modelBuilder.Entity<CommunityGroup>().ToTable("CommunityGroup");
-            modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<CommunityMember>().ToTable("CommunityMember");
-            modelBuilder.Entity<Author>().ToTable("Author");
-            modelBuilder.Entity<Book>().ToTable("Book");
-            modelBuilder.Entity<OwnedBook>().ToTable("OwnedBook");
-            modelBuilder.Entity<PooledBook>().ToTable("PooledBook");
-
-
+            base.OnModelCreating(modelBuilder);
         }
 
     }

@@ -1,0 +1,35 @@
+﻿@model BookFriends.ViewModels.CommunityViewModel
+
+@{
+    ViewData["Title"] = Model.CommunityGroup.Name;
+}
+
+<div class="container">
+    <h3>@Model.CommunityGroup.Name</h3>
+    <p>@Model.CommunityGroup.Description</p>
+</div>
+
+<div class="container">
+    <h4>Members</h4>
+    <p class="text-secondary">Showing @Model.Memberships.Count of @Model.TotalMembers members </p>
+    <ul>
+        @foreach (var member in Model.Memberships)
+        {
+            <li>@member.User.DisplayName</li>
+        }
+    </ul>
+</div>
+
+<div class="container">
+    <h4>Available Books</h4>
+    <p class="text-secondary">Showing @Model.PooledBooks.Count of @Model.TotalPooledBooks books </p>
+    <ul>
+        @foreach (var book in Model.PooledBooks)
+        {
+            <li>
+                <b>@book.OwnedBook.Book.Name</b>
+                <p class="text-secondary">@book.OwnedBook.Book.Authors.First().Author.LastName, @book.OwnedBook.Book.Authors.First().Author.FirstNames</p>
+            </li>
+        }
+    </ul>
+</div>

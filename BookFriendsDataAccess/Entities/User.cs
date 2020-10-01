@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookFriendsDataAccess.Entities
 {
+    [Table("User")]
     public class User
     {
         [Key]
@@ -16,8 +18,8 @@ namespace BookFriendsDataAccess.Entities
         [Required]
         [StringLength(maximumLength:30, MinimumLength = 1)]
         public String DisplayName { get; set; }
-        public virtual List<CommunityMember> Memberships { get; set; }
-        public virtual List<OwnedBook> OwnedBooks { get; set; }
+        public virtual ICollection<CommunityMember> Memberships { get; set; }
+        public virtual ICollection<OwnedBook> OwnedBooks { get; set; }
 
         public User()
         {

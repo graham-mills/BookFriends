@@ -27,8 +27,11 @@ namespace BookFriends
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<BookFriendsDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<BookFriendsDbContext>(opt => opt.UseLazyLoadingProxies()
+            .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IEntityRepository<CommunityGroup>, EntityRepository<CommunityGroup>>();
+            services.AddScoped<IEntityRepository<CommunityMember>, EntityRepository<CommunityMember>>();
+            services.AddScoped<IEntityRepository<PooledBook>, EntityRepository<PooledBook>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

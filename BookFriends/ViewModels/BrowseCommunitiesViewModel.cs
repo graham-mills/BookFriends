@@ -15,5 +15,6 @@ namespace BookFriends.ViewModels
         }
         public List<CommunityGroup> Communities { get; set; }
         public List<CommunityMember> Memberships { get; set; }
+        public int TotalCommunities { get; set; }
     }
 }

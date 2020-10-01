@@ -8,7 +8,7 @@ namespace BookFriendsDataAccess
 {
     public interface IEntityRepository<TEntity> where TEntity : class
     {
-        TEntity Get(Guid id);
+        TEntity GetById(Guid id);
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,

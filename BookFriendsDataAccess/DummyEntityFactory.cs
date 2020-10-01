@@ -13,18 +13,20 @@ namespace BookFriendsDataAccess
     {
         // Entities are stored in type maps, making it easier to setup relationships between
         // entities after constructing them, without relying on indexes.
-        public enum UserType      { HARRY, HERMIONE, RON, GINNY, NEVILLE, MALFOY };
-        public enum CommunityType { HOGWARTS, LOCKHART_SOCIETY, ASKABAN_REHAB};
-        public enum AuthorType    { LOCKHART, BORAGE, RIDDLE, BOURNE, CROUCH};
-        public enum BookType      { WHO_AM_I, POTION_MAKING, DEAR_DIARY, POTENTE_POTIONS, BASIC_HEXES};
-        public enum MemberType    { HOGWARTS__HARRY, HOGWARTS__HERMIONE, HOGWARTS__RON, HOGWARTS__GINNY, 
-                                    HOGWARTS__NEVILLE, HOGWARTS__MALFOY, LOCKHART_SOCIETY__NEVILLE};     
+        public enum UserType      { Harry, Hermione, Ron, Ginny, Neville, Malfoy };
+        public enum CommunityType { Hogwarts, Lockhart_Society, Askaban_Rehab};
+        public enum AuthorType    { Lockhart, Borage, Riddle, Bourne, Crouch};
+        public enum BookType      { Who_Am_I, Potion_Making, Dear_Diary, Potente_Potions, Basic_Hexes};
+        public enum MemberType    { Hogwarts_Harry, Hogwarts_Hermione, Hogwarts_Ron, Hogwarts_Ginny, 
+                                    Hogwarts_Neville, Hogwarts_Malfoy, Lockhart_Society_Neville};     
 
         public Dictionary<AuthorType, Author> Authors { get; set; }
         public Dictionary<BookType, Book> Books { get; set; }
         public Dictionary<UserType, User> Users { get; set; }
         public Dictionary<CommunityType, CommunityGroup> CommunityGroups { get; set; }
         public Dictionary<MemberType, CommunityMember> CommunityMembers { get; set; }
+        public List<OwnedBook> OwnedBooks { get; set; }
+        public List<PooledBook> PooledBooks { get; set; }
 
         public DummyEntityFactory()
         {
@@ -33,6 +35,8 @@ namespace BookFriendsDataAccess
             Users = new Dictionary<UserType, User>();
             CommunityGroups = new Dictionary<CommunityType, CommunityGroup>();
             CommunityMembers = new Dictionary<MemberType, CommunityMember>();
+            OwnedBooks = new List<OwnedBook>();
+            PooledBooks = new List<PooledBook>();
         }
 
         public void CreateEntities()
@@ -47,37 +51,37 @@ namespace BookFriendsDataAccess
 
         private void CreateUsers()
         {
-            Users.Add(UserType.HARRY, new User
+            Users.Add(UserType.Harry, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Harry",
                 EmailAddress = "h.potter@owlmail.com"
             });
-            Users.Add(UserType.HERMIONE, new User
+            Users.Add(UserType.Hermione, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Hermione",
                 EmailAddress = "h.granger@owlmail.com"
             });
-            Users.Add(UserType.RON, new User
+            Users.Add(UserType.Ron, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Ron",
                 EmailAddress = "r.weasley@owlmail.com"
             });
-            Users.Add(UserType.GINNY, new User
+            Users.Add(UserType.Ginny, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Ginny",
                 EmailAddress = "g.weasley@owlmail.com"
             });
-            Users.Add(UserType.NEVILLE, new User
+            Users.Add(UserType.Neville, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Neville",
                 EmailAddress = "n.loooongbottom@owlmail.com"
             });
-            Users.Add(UserType.MALFOY, new User
+            Users.Add(UserType.Malfoy, new User
             {
                 Id = Guid.NewGuid(),
                 DisplayName = "Malfoy",
@@ -87,31 +91,31 @@ namespace BookFriendsDataAccess
 
         private void CreateAuthors()
         {
-            Authors.Add(AuthorType.LOCKHART, new Author
+            Authors.Add(AuthorType.Lockhart, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Gilderoy",
                 LastName = "Lockhart"
             });
-            Authors.Add(AuthorType.BORAGE, new Author
+            Authors.Add(AuthorType.Borage, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Libatius",
                 LastName = "Borage"
             });
-            Authors.Add(AuthorType.RIDDLE, new Author
+            Authors.Add(AuthorType.Riddle, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Tom",
                 LastName = "Riddle"
             });
-            Authors.Add(AuthorType.BOURNE, new Author
+            Authors.Add(AuthorType.Bourne, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Phineas",
                 LastName = "Bourne"
             });
-            Authors.Add(AuthorType.CROUCH, new Author
+            Authors.Add(AuthorType.Crouch, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Bartemius",
@@ -121,53 +125,35 @@ namespace BookFriendsDataAccess
 
         private void CreateBooks()
         {
-            Books.Add(BookType.WHO_AM_I, new Book
-            {
-                Id = Guid.NewGuid(),
-                Name = "Who Am I?",
-                Authors = new List<Author>() { Authors[AuthorType.LOCKHART] }
-            });
-            Books.Add(BookType.POTION_MAKING, new Book
-            {
-                Id = Guid.NewGuid(),
-                Name = "Advanced Potion Making",
-                Authors = new List<Author>() { Authors[AuthorType.BORAGE] }
-            });
-            Books.Add(BookType.DEAR_DIARY, new Book
-            {
-                Id = Guid.NewGuid(),
-                Name = "Dear Diary",
-                Authors = new List<Author>() { Authors[AuthorType.RIDDLE] }
-            });
-            Books.Add(BookType.POTENTE_POTIONS, new Book
-            {
-                Id = Guid.NewGuid(),
-                Name = "Moste Potente Potions",
-                Authors = new List<Author>() { Authors[AuthorType.BOURNE] }
-            });
-            Books.Add(BookType.BASIC_HEXES, new Book
-            {
-                Id = Guid.NewGuid(),
-                Name = "Basic Hexes for the Busy and Vexed",
-                Authors = new List<Author>() { Authors[AuthorType.CROUCH] }
-            });
+            CreateBook(Guid.NewGuid(), BookType.Who_Am_I, "Who Am I?", AuthorType.Lockhart);
+            CreateBook(Guid.NewGuid(), BookType.Potion_Making, "Advanced Potion Making", AuthorType.Borage);
+            CreateBook(Guid.NewGuid(), BookType.Dear_Diary, "Dear Diary", AuthorType.Riddle);
+            CreateBook(Guid.NewGuid(), BookType.Potente_Potions, "Moste Potente Potions", AuthorType.Bourne);
+            CreateBook(Guid.NewGuid(), BookType.Basic_Hexes, "Basic Hexes for the Busy and Vexed", AuthorType.Crouch);
+        }
+
+        private void CreateBook(Guid id, BookType bookType, string name, AuthorType authorType)
+        {
+            var book = new Book() { Id = id, Name = name, Authors = new List<AuthorBook>() };
+            book.Authors.Add(new AuthorBook { Author = Authors[authorType], Book = book });
+            Books.Add(bookType, book);
         }
 
         private void CreateCommunityGroups()
         {
-            CommunityGroups.Add(CommunityType.HOGWARTS, new CommunityGroup
+            CommunityGroups.Add(CommunityType.Hogwarts, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
                 Name = "Hogwarts (Students)",
                 Description = "Slytherins not allowed."
             });
-            CommunityGroups.Add(CommunityType.LOCKHART_SOCIETY, new CommunityGroup
+            CommunityGroups.Add(CommunityType.Lockhart_Society, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
                 Name = "Gilderoy Lockhart Appreciation Society",
                 Description = "Gilderoy Lockhart, Order of Merlin, Third Class, Honorary Member of the Dark Force Defence League, and five-time winner of Witch Weekly's Most Charming Smile Award."
             });
-            CommunityGroups.Add(CommunityType.ASKABAN_REHAB, new CommunityGroup
+            CommunityGroups.Add(CommunityType.Askaban_Rehab, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
                 Name = "Askaban Rehabilitation Group",
@@ -177,91 +163,111 @@ namespace BookFriendsDataAccess
 
         private void CreateOwnedBooks()
         {
+            OwnedBook book;
             // Neville's books
-            Users[UserType.NEVILLE].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = true,
-                Book = Books[BookType.WHO_AM_I],
+                Book = Books[BookType.Who_Am_I],
                 Notes = "Signed special edition."
-            });
+            };
+            Users[UserType.Neville].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
             // Harry's books
-            Users[UserType.HARRY].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = true,
-                Book = Books[BookType.POTION_MAKING],
+                Book = Books[BookType.Potion_Making],
                 Notes = "Missing pages 31-32."
-            });
+            };
+            Users[UserType.Harry].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
             // Hermione's books
-            Users[UserType.HERMIONE].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = false,
-                Book = Books[BookType.POTION_MAKING],
+                Book = Books[BookType.Potion_Making],
                 Notes = "Unabridged version"
-            });
-            Users[UserType.HERMIONE].OwnedBooks.Add(new OwnedBook()
+            };
+            Users[UserType.Hermione].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = true,
-                Book = Books[BookType.POTENTE_POTIONS],
+                Book = Books[BookType.Potente_Potions],
                 Notes = "Slightly damp"
-            });
+            };
+            Users[UserType.Hermione].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
             // Ron's books
-            Users[UserType.RON].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = true,
-                Book = Books[BookType.POTION_MAKING],
+                Book = Books[BookType.Potion_Making],
                 Notes = "Unread."
-            });
+            };
+            Users[UserType.Ron].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
             // Ginny's books
-            Users[UserType.GINNY].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = false,
-                Book = Books[BookType.DEAR_DIARY],
+                Book = Books[BookType.Dear_Diary],
                 Notes = "Only copy in the school."
-            });
+            };
+            Users[UserType.Ginny].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
             // Malfoy's books
-            Users[UserType.MALFOY].OwnedBooks.Add(new OwnedBook()
+            book = new OwnedBook()
             {
                 Id = Guid.NewGuid(),
                 Available = true,
-                Book = Books[BookType.BASIC_HEXES],
+                Book = Books[BookType.Basic_Hexes],
                 Notes = ""
-            });
+            };
+            Users[UserType.Malfoy].OwnedBooks.Add(book);
+            OwnedBooks.Add(book);
         }
 
         private void CreateCommunityMembers()
         {
-            CreateCommunityMember(UserType.HARRY   , MemberType.HOGWARTS__HARRY          , CommunityType.HOGWARTS);
-            CreateCommunityMember(UserType.HERMIONE, MemberType.HOGWARTS__HERMIONE       , CommunityType.HOGWARTS);
-            CreateCommunityMember(UserType.RON     , MemberType.HOGWARTS__RON            , CommunityType.HOGWARTS);
-            CreateCommunityMember(UserType.GINNY   , MemberType.HOGWARTS__GINNY          , CommunityType.HOGWARTS);
-            CreateCommunityMember(UserType.NEVILLE , MemberType.HOGWARTS__NEVILLE        , CommunityType.HOGWARTS);
-            CreateCommunityMember(UserType.NEVILLE , MemberType.LOCKHART_SOCIETY__NEVILLE, CommunityType.LOCKHART_SOCIETY);
-            CreateCommunityMember(UserType.MALFOY  , MemberType.HOGWARTS__MALFOY         , CommunityType.HOGWARTS);
+            CreateCommunityMember(UserType.Harry   , MemberType.Hogwarts_Harry          , CommunityType.Hogwarts);
+            CreateCommunityMember(UserType.Hermione, MemberType.Hogwarts_Hermione       , CommunityType.Hogwarts);
+            CreateCommunityMember(UserType.Ron     , MemberType.Hogwarts_Ron            , CommunityType.Hogwarts);
+            CreateCommunityMember(UserType.Ginny   , MemberType.Hogwarts_Ginny          , CommunityType.Hogwarts);
+            CreateCommunityMember(UserType.Neville , MemberType.Hogwarts_Neville        , CommunityType.Hogwarts);
+            CreateCommunityMember(UserType.Neville , MemberType.Lockhart_Society_Neville, CommunityType.Lockhart_Society);
+            CreateCommunityMember(UserType.Malfoy  , MemberType.Hogwarts_Malfoy         , CommunityType.Hogwarts);
         }
 
         private void CreateCommunityMember(UserType userType, MemberType memberType, CommunityType communityType)
         {
             var member = new CommunityMember();
             member.Id = Guid.NewGuid();
-            member.Role = CommunityMember.MembershipRole.MEMBER;
+            member.Role = CommunityMember.MembershipRole.Member;
             member.CommunityGroup = CommunityGroups[communityType];
 
-            Users[userType].OwnedBooks.ForEach(b =>
+            PooledBook pooledBook;
+            foreach (var ownedBook in Users[userType].OwnedBooks)
             {
-                member.PooledBooks.Add(new PooledBook
+
+                pooledBook = new PooledBook
                 {
                     Id = Guid.NewGuid(),
-                    MemberBook = b
-                });
-            });
-
+                    OwnedBook = ownedBook
+                };
+                member.PooledBooks.Add(pooledBook);
+                PooledBooks.Add(pooledBook);
+            }
             CommunityMembers.Add(memberType, member);
+            Users[userType].Memberships.Add(member);
+            CommunityGroups[communityType].CommunityMembers.Add(member);
         }
     }
 }

@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace BookFriendsDataAccess.Entities
 {
+    [Table("PooledBook")]
     public class PooledBook
     {
         [Key]
         public Guid Id { get; set; }
         [Required]
-        public OwnedBook MemberBook { get; set; }
+        [ForeignKey("OwnedBookId")]
+        public virtual OwnedBook OwnedBook { get; set; }
         [Required]
-        public CommunityMember CommunityMember { get; set; }
+        [ForeignKey("CommunityMemberId")]
+        public virtual CommunityMember CommunityMember { get; set; }
     }
 }

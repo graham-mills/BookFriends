@@ -23,8 +23,15 @@ namespace BookFriendsDataAccess
             _context.SaveChanges();
         }
 
-        public TEntity Get(Guid id) => _context.Set<TEntity>().Find(id);
+        public TEntity GetById(Guid id) => _context.Set<TEntity>().Find(id);
 
+        /// <summary>
+        /// Gets entities from database, lazily loaded by default
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="take">Upper limit to take from database</param>
+        /// <returns></returns>
         public IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
@@ -65,7 +72,7 @@ namespace BookFriendsDataAccess
 
         public void Delete(Guid id)
         {
-            var entity = Get(id);
+            var entity = GetById(id);
             if (entity == null)
             {
                 throw new ArgumentException();

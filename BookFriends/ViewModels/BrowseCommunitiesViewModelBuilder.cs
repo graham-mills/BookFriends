@@ -15,7 +15,7 @@ namespace BookFriends.ViewModels
         private readonly IConfiguration _configuration;
         private readonly IEntityRepository<CommunityGroup> _communityGroupRepo;
 
-        public BrowseCommunitiesViewModel CommunityListings;
+        public BrowseCommunitiesViewModel ViewModel { get; private set; }
 
         public BrowseCommunitiesViewModelBuilder(ILogger logger, IConfiguration configuration, IEntityRepository<CommunityGroup> communityGroupRepo)
         {
@@ -28,8 +28,8 @@ namespace BookFriends.ViewModels
         {
             int communitiesToDisplay = _configuration.GetValue<int>(ConfigurationKeys.BrowseCommunitiesPaginationSize);
 
-            CommunityListings = new BrowseCommunitiesViewModel();
-            CommunityListings.Communities.AddRange( _communityGroupRepo.Get(take: communitiesToDisplay));
+            ViewModel = new BrowseCommunitiesViewModel();
+            ViewModel.Communities.AddRange(_communityGroupRepo.Get(take: communitiesToDisplay));
         }
 
     }

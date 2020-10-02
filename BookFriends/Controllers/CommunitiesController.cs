@@ -31,9 +31,11 @@ namespace BookFriends.Controllers
 
         public IActionResult Browse()
         {
-            var viewModelBuilder = new BrowseCommunitiesViewModelBuilder(_logger, _configuration, _communityGroupRepo);
-            viewModelBuilder.Build();
-            return View(viewModelBuilder.ViewModel);
+            int communitiesToDisplay = _configuration.GetValue<int>(ConfigurationKeys.BrowseCommunitiesPaginationSize);
+
+            var viewModel = new BrowseCommunitiesViewModel();
+            viewModel.Communities.AddRange(_communityGroupRepo.Get(take: communitiesToDisplay));
+            return View(viewModel);
         }
 
     }

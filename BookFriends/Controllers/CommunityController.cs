@@ -39,14 +39,27 @@ namespace BookFriends.Controllers
 
         public IActionResult View(Guid id)
         {
-            if (_communityGroupRepo.GetById(id) == null)
+            var communityGroup = _communityGroupRepo.GetById(id);
+            if (communityGroup == null)
                 return NotFound(id);
 
-            var viewModelBuilder = new CommunityViewModelBuilder(_logger, _configuration, _communityGroupRepo, _communityMemberRepo, _pooledBookRepo);
-            viewModelBuilder.CommunityGroupId = id;
-            viewModelBuilder.Build();
+            int membersToDisplay = _configuration.GetValue<int>(ConfigurationKeys.ViewCommunityMembersPaginationSize);
+            int booksToDisplay   = _configuration.GetValue<int>(ConfigurationKeys.ViewCommunityBooksPaginationSize);
 
-            return View(viewModelBuilder.ViewModel);
+            int totalPooledBooks = 0;
+            foreach (var member in communityGroup.CommunityMembers)
+                totalPooledBooks += member.PooledBooks.Count;
+
+            var viewModel = new CommunityViewModel()
+            {
+                CommunityGroup = communityGroup,
+                Memberships = _communityMemberRepo.Get(filter: m => m.CommunityGroup.Id.Equals(communityGroup.Id), take: membersToDisplay).ToList(),
+                PooledBooks = _pooledBookRepo.Get(filter: b => b.CommunityMember.CommunityGroup.Id.Equals(communityGroup.Id), take: booksToDisplay).ToList(),
+                TotalMembers = communityGroup.CommunityMembers.Count,
+                TotalPooledBooks = totalPooledBooks
+            };
+
+            return View(viewModel);
         }
     }
 }

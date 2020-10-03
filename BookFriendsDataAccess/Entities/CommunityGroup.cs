@@ -23,6 +23,17 @@ namespace BookFriendsDataAccess.Entities
             CommunityMembers = new List<CommunityMember>();
         }
 
-        public int GetMemberCount() => CommunityMembers != null ? CommunityMembers.Count : 0;
+        public object ToAnonymousDto()
+        {
+            return new
+            {
+                id = Id.ToString(),
+                name = Name,
+                description = Description,
+                memberCount = CommunityMembers.Count
+            };
+        }
+
+
     }
 }

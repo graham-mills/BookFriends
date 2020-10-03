@@ -83,7 +83,7 @@ namespace BookFriendsTest.ControllerTests
 
             // Assert
             var viewModel = result.Model as BrowseCommunitiesViewModel;
-            Assert.AreEqual(expectedGroupsReturned, viewModel.Communities.Count);
+            Assert.AreEqual(expectedGroupsReturned, viewModel.CommunityGroupDtos.Count);
         }
     }
 }

@@ -10,11 +10,11 @@ namespace BookFriends.ViewModels
     {
         public BrowseCommunitiesViewModel()
         {
-            Communities = new List<CommunityGroup>();
-            Memberships = new List<CommunityMember>();
+            CommunityGroupDtos = new List<object>();
+            MembershipDtos = new List<object>();
         }
-        public List<CommunityGroup> Communities { get; set; }
-        public List<CommunityMember> Memberships { get; set; }
+        public List<object> CommunityGroupDtos { get; set; }
+        public List<object> MembershipDtos { get; set; }
         public int TotalCommunities { get; set; }
     }
 }

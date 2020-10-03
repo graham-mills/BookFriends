@@ -32,9 +32,9 @@ namespace BookFriends.Controllers
         public IActionResult Browse()
         {
             int communitiesToDisplay = _configuration.GetValue<int>(ConfigurationKeys.BrowseCommunitiesPaginationSize);
-
             var viewModel = new BrowseCommunitiesViewModel();
-            viewModel.Communities.AddRange(_communityGroupRepo.Get(take: communitiesToDisplay));
+            _communityGroupRepo.Get(take: communitiesToDisplay).ToList().ForEach(cg => viewModel.CommunityGroupDtos.Add(cg.ToAnonymousDto()));
+            viewModel.TotalCommunities = _communityGroupRepo.Get().Count();
             return View(viewModel);
         }
 

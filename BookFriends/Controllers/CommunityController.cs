@@ -14,14 +14,14 @@ namespace BookFriends.Controllers
     public class CommunityController : Controller
     {
         private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private readonly IBfConfiguration _configuration;
         private readonly IEntityRepository<CommunityGroup> _communityGroupRepo;
         private readonly IEntityRepository<CommunityMember> _communityMemberRepo;
         private readonly IEntityRepository<PooledBook> _pooledBookRepo;
 
         public CommunityController(
             ILogger<CommunityController> logger,
-            IConfiguration configuration,
+            IBfConfiguration configuration,
             IEntityRepository<CommunityGroup> communityGroupRepo,
             IEntityRepository<CommunityMember> communityMemberRepo,
             IEntityRepository<PooledBook> pooledBookRepo)
@@ -43,8 +43,8 @@ namespace BookFriends.Controllers
             if (communityGroup == null)
                 return NotFound(id);
 
-            int membersToDisplay = _configuration.GetValue<int>(ConfigurationKeys.ViewCommunityMembersPaginationSize);
-            int booksToDisplay   = _configuration.GetValue<int>(ConfigurationKeys.ViewCommunityBooksPaginationSize);
+            int membersToDisplay = _configuration.ViewCommunityMembersPerPage;
+            int booksToDisplay = _configuration.ViewCommunityBooksPerPage;
 
             int totalPooledBooks = 0;
             foreach (var member in communityGroup.CommunityMembers)

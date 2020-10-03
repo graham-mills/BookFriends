@@ -14,10 +14,10 @@ namespace BookFriends.Controllers
     public class CommunitiesController : Controller
     {
         private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private readonly IBfConfiguration _configuration;
         private readonly IEntityRepository<CommunityGroup> _communityGroupRepo;
 
-        public CommunitiesController(ILogger<CommunitiesController> logger, IConfiguration configuration, IEntityRepository<CommunityGroup> communityGroupRepo)
+        public CommunitiesController(ILogger<CommunitiesController> logger, IBfConfiguration configuration, IEntityRepository<CommunityGroup> communityGroupRepo)
         {
             _logger = logger;
             _configuration = configuration;
@@ -31,9 +31,9 @@ namespace BookFriends.Controllers
 
         public IActionResult Browse()
         {
-            int communitiesToDisplay = _configuration.GetValue<int>(ConfigurationKeys.BrowseCommunitiesPaginationSize);
+            int listingsToDisplay = _configuration.BrowseCommunitiesListingsPerPage;
             var viewModel = new BrowseCommunitiesViewModel();
-            _communityGroupRepo.Get(take: communitiesToDisplay).ToList().ForEach(cg => viewModel.CommunityGroupDtos.Add(cg.ToAnonymousDto()));
+            _communityGroupRepo.Get(take: listingsToDisplay).ToList().ForEach(cg => viewModel.CommunityGroupDtos.Add(cg.ToAnonymousDto()));
             viewModel.TotalCommunities = _communityGroupRepo.Get().Count();
             return View(viewModel);
         }

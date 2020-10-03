@@ -1,3 +1,4 @@
+using BookFriends;
 using BookFriends.Controllers;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
@@ -19,8 +20,7 @@ namespace BookFriendsTest.ControllerTests
     {
         private readonly Mock<IEntityRepository<CommunityGroup>> mockCommunityGroupRepo = new Mock<IEntityRepository<CommunityGroup>>();
         private readonly Mock<ILogger<CommunitiesController>> mockLogger = new Mock<ILogger<CommunitiesController>>();
-        private readonly Mock<IConfiguration> mockConfiguration = new Mock<IConfiguration>();
-        private readonly Mock<IConfigurationSection> mockConfigurationSection = new Mock<IConfigurationSection>();
+        private readonly Mock<IBfConfiguration> mockConfiguration = new Mock<IBfConfiguration>();
        
         private CommunitiesController uut;
         private DummyEntityFactory entityFactory;
@@ -31,26 +31,22 @@ namespace BookFriendsTest.ControllerTests
             entityFactory.CreateEntities();
         }
 
-        private void SetupMockConfiguration(int configuredPaginationAmount)
+        private void SetupMockCommunityGroupRepo(IEnumerable<CommunityGroup> itemsInRepo, int expectedItemsToTake, int expectedItemsToSkip = 0)
         {
-            mockConfigurationSection.Setup(a => a.Value).Returns(configuredPaginationAmount.ToString());
-            mockConfiguration.Setup(c => c.GetSection(It.IsAny<String>())).Returns(mockConfigurationSection.Object);
-        }
-
-        private void SetupMockCommunityGroupRepo(IEnumerable<CommunityGroup> groupsInRepo, int expectedAmountToTake)
-        {
-            // Return correct amount of groups if correct amount are requested
-            mockCommunityGroupRepo.Setup(x => x.Get(
-                It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
-                It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
-                It.Is<int?>(t => t == expectedAmountToTake))
-            ).Returns(groupsInRepo.Take(expectedAmountToTake));
-            // Returns no groups if incorrect amount are requested
-            mockCommunityGroupRepo.Setup(x => x.Get(
-                It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
-                It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
-                It.Is<int?>(t => t != expectedAmountToTake))
-            ).Returns(groupsInRepo.Take(0));
+            //// Return correct amount of groups if correct amount are requested
+            //mockCommunityGroupRepo.Setup(x => x.Get(
+            //    It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
+            //    It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
+            //    It.Is<int?>(t => t == expectedItemsToTake),
+            //    It.IsAny<int?>())
+            //).Returns(itemsInRepo.Take(expectedItemsToTake));
+            //// Returns no groups if incorrect amount are requested
+            //mockCommunityGroupRepo.Setup(x => x.Get(
+            //    It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
+            //    It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
+            //    It.Is<int?>(t => t != expectedItemsToTake),
+            //    It.IsAny<int?>())
+            //).Returns(itemsInRepo.Take(0));
         }
 
         [SetUp]
@@ -75,8 +71,8 @@ namespace BookFriendsTest.ControllerTests
         public void Browse(int paginationAmount, int groupsInRepo, int expectedGroupsReturned)
         {
             // Arrange
-            SetupMockConfiguration(paginationAmount);
-            SetupMockCommunityGroupRepo(entityFactory.CommunityGroups.Values.Take(groupsInRepo), paginationAmount);
+            mockConfiguration.Setup(c => c.BrowseCommunitiesListingsPerPage).Returns(paginationAmount);
+            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(groupsInRepo), paginationAmount);
 
             // Act
             var result = uut.Browse() as ViewResult;

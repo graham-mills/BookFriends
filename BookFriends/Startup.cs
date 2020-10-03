@@ -27,6 +27,7 @@ namespace BookFriends
             services.AddScoped<IEntityRepository<CommunityGroup>, EntityRepository<CommunityGroup>>();
             services.AddScoped<IEntityRepository<CommunityMember>, EntityRepository<CommunityMember>>();
             services.AddScoped<IEntityRepository<PooledBook>, EntityRepository<PooledBook>>();
+            services.AddScoped<IBfConfiguration, BfConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

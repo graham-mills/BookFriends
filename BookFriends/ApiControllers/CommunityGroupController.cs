@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace BookFriends.ApiControllers
@@ -13,19 +14,27 @@ namespace BookFriends.ApiControllers
     [ApiController]
     public class CommunityGroupController : ControllerBase
     {
+        private readonly ILogger<CommunityGroupController> _logger;
         private readonly IEntityRepository<CommunityGroup> _entityRepo;
+        private readonly IBfConfiguration _configuration;
 
-        public CommunityGroupController(IEntityRepository<CommunityGroup> entityRepo)
+        public CommunityGroupController(ILogger<CommunityGroupController> logger, IBfConfiguration configuration, IEntityRepository<CommunityGroup> entityRepo)
         {
+            _logger = logger;
+            _configuration = configuration;
             _entityRepo = entityRepo;
         }
 
         // GET: api/<CommunityGroupApiController>
         [HttpGet]
-        public ActionResult<object[]> Get()
+        public ActionResult<object[]> Get(int items = 0, int page = 1)
         {
+            if (page < 1) return BadRequest(page);
+
+
             ICollection<object> dtos = new List<object>();
-            _entityRepo.Get().ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
+            int itemsToSkip = (page - 1) * items;
+            _entityRepo.Get(take: items, skip: itemsToSkip).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
             return dtos.ToArray();
         }
 

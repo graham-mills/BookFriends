@@ -12,7 +12,8 @@ namespace BookFriendsDataAccess
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            int? take = null);
+            int? take = null,
+            int? skip = null);
 
         void Add(TEntity entity);
         void Update(TEntity entity);

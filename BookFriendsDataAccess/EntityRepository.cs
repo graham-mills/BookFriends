@@ -35,7 +35,8 @@ namespace BookFriendsDataAccess
         public IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            int? take = null)
+            int? take = null,
+            int? skip = null)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
 
@@ -44,7 +45,12 @@ namespace BookFriendsDataAccess
                 query = query.Where(filter);
             }
 
-            if (take != null)
+            if(skip != null && skip > 0)
+            {
+                query = query.Skip((int)skip);
+            }
+
+            if (take != null && take > 0)
             {
                 query = query.Take((int)take);
             }

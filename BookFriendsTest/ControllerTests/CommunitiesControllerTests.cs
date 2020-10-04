@@ -4,15 +4,10 @@ using BookFriends.ViewModels;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace BookFriendsTest.ControllerTests
 {
@@ -29,24 +24,6 @@ namespace BookFriendsTest.ControllerTests
         {
             entityFactory = new DummyEntityFactory();
             entityFactory.CreateEntities();
-        }
-
-        private void SetupMockCommunityGroupRepo(IEnumerable<CommunityGroup> itemsInRepo, int expectedItemsToTake, int expectedItemsToSkip = 0)
-        {
-            //// Return correct amount of groups if correct amount are requested
-            //mockCommunityGroupRepo.Setup(x => x.Get(
-            //    It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
-            //    It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
-            //    It.Is<int?>(t => t == expectedItemsToTake),
-            //    It.IsAny<int?>())
-            //).Returns(itemsInRepo.Take(expectedItemsToTake));
-            //// Returns no groups if incorrect amount are requested
-            //mockCommunityGroupRepo.Setup(x => x.Get(
-            //    It.IsAny<Expression<Func<CommunityGroup, bool>>>(),
-            //    It.IsAny<Func<IQueryable<CommunityGroup>, IOrderedQueryable<CommunityGroup>>>(),
-            //    It.Is<int?>(t => t != expectedItemsToTake),
-            //    It.IsAny<int?>())
-            //).Returns(itemsInRepo.Take(0));
         }
 
         [SetUp]
@@ -68,11 +45,11 @@ namespace BookFriendsTest.ControllerTests
         [TestCase(2, 1, 1)]
         [TestCase(2, 2, 2)]
         [TestCase(2, 3, 2)]
-        public void Browse(int paginationAmount, int groupsInRepo, int expectedGroupsReturned)
+        public void Browse(int listingsPerPage, int groupsInRepo, int expectedGroupsReturned)
         {
             // Arrange
-            mockConfiguration.Setup(c => c.BrowseCommunitiesListingsPerPage).Returns(paginationAmount);
-            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(groupsInRepo), paginationAmount);
+            mockConfiguration.Setup(c => c.BrowseCommunitiesListingsPerPage).Returns(listingsPerPage);
+            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(groupsInRepo), listingsPerPage);
 
             // Act
             var result = uut.Browse() as ViewResult;
@@ -80,6 +57,7 @@ namespace BookFriendsTest.ControllerTests
             // Assert
             var viewModel = result.Model as BrowseCommunitiesViewModel;
             Assert.AreEqual(expectedGroupsReturned, viewModel.CommunityGroupDtos.Count);
+            Assert.AreEqual(listingsPerPage, viewModel.ListingsPerPage);
         }
     }
 }

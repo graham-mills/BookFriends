@@ -1,9 +1,4 @@
-﻿using BookFriendsDataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 namespace BookFriends.ViewModels
 {
     public class BrowseCommunitiesViewModel
@@ -16,5 +11,6 @@ namespace BookFriends.ViewModels
         public List<object> CommunityGroupDtos { get; set; }
         public List<object> MembershipDtos { get; set; }
         public int TotalCommunities { get; set; }
+        public int ListingsPerPage { get; set; }
     }
 }

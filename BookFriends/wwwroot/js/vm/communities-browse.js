@@ -1,21 +1,34 @@
-﻿
-let data = {
-    communityListings: [],
-    totalCommunities: 0,
-    displayViewMoreButton: true,
-    displayLoadingSpinner: false
-};
-
-const vm = Vue.createApp({
+﻿const vm = Vue.createApp({
     data() {
-        return data;
+        return {
+            communityListings: [],
+            totalCommunities: 0,
+            listingsPage: 1,
+            listingsPerPage: 0,
+            displayViewMoreButton: true,
+            displayLoadingSpinner: false
+        };
     },
     methods: {
         loadMoreListings(event) {
-            console.info("button clicked");
+            fetch(`/api/communitygroup/?items=${this.listingsPerPage}&page=${this.listingsPage + 1}`, {
+                method: "GET"
+            }).then(response => this.handleFetchResponse(response))
+              .then(data => this.handleFetchData(data));
+            
+            this.displayViewMoreButton = false;
+            this.displayLoadingSpinner = true;
+        },
+        handleFetchResponse(response) {
+            this.displayViewMoreButton = true;
+            this.displayLoadingSpinner = false;
+            return response.json();
+        },
+        handleFetchData(data) {
+            data.forEach(listing => this.communityListings.push(listing));
+            this.listingsPage += 1;
+            this.displayViewMoreButton = (this.communityListings.length < this.totalCommunities);
         }
-    },
-    mounted() { console.info("vm mounted") },
-    beforeUpdate() { console.info("vm beforeUpdate")},
-    updated() { console.info("vm updated") }
+    }
 }).mount("#browse-communities");
+

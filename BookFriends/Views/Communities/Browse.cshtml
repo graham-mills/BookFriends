@@ -8,9 +8,9 @@
     <div id="browse-communities" class="container">
         <h3>Browse Communities</h3>
         <input type="text" class="form-control" placeholder="Find a community.." aria-label="Find a community" aria-describedby="search-communities" />
-        <p class="text-secondary">Showing {{ communityListings.length }} of {{ totalCommunities }} communities</p>
-        <ul v-for="listing in communityListings">
-            <li class="row mt-3 mb-3">
+        <p class="text-secondary">Showing {{ communityListings.length > 0 ? "1-" : "" }}{{ communityListings.length }} of {{ totalCommunities }} communities</p>
+        <ul>
+            <li class="row mt-3 mb-3" v-for="listing in communityListings">
                 <div class="col-2 text-center">
                     <img class="img-thumbnail bf-thumb" />
                 </div>
@@ -33,13 +33,12 @@
         </div>
     </div>
 
-
-
 @section Scripts {
     <script src="~/lib/vue/vue.global.prod.js"></script>
     <script src="~/js/vm/communities-browse.js"></script>
     <script>
-        vm.$data.communityListings = @Json.Serialize(Model.CommunityGroupDtos);
-        vm.$data.totalCommunities = @Model.TotalCommunities;
+        vm.communityListings = @Json.Serialize(Model.CommunityGroupDtos);
+        vm.totalCommunities = @Model.TotalCommunities;
+        vm.listingsPerPage = @Model.ListingsPerPage;
     </script>
 }

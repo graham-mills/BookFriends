@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace BookFriendsTest.ControllerTests
+namespace BookFriendsTest
 {
     public static class MockExtensions
     {

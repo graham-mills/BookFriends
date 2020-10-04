@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace BookFriends.Controllers
@@ -35,6 +31,7 @@ namespace BookFriends.Controllers
             var viewModel = new BrowseCommunitiesViewModel();
             _communityGroupRepo.Get(take: listingsToDisplay).ToList().ForEach(cg => viewModel.CommunityGroupDtos.Add(cg.ToAnonymousDto()));
             viewModel.TotalCommunities = _communityGroupRepo.Get().Count();
+            viewModel.ListingsPerPage = listingsToDisplay;
             return View(viewModel);
         }
 

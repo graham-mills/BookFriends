@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BookFriendsDataAccess.Entities
 {
     [Table("CommunityGroup")]
-    public class CommunityGroup
+    public class CommunityGroup : ISearchQueryableEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -34,6 +34,9 @@ namespace BookFriendsDataAccess.Entities
             };
         }
 
-
+        public int CalculateQueryDistance(string query)
+        {
+            return Algorithms.CalculateLevenshteinDistance(Name.ToLower(), query.ToLower());
+        }
     }
 }

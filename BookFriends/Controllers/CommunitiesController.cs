@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
@@ -33,6 +35,16 @@ namespace BookFriends.Controllers
             viewModel.TotalCommunities = _communityGroupRepo.Get().Count();
             viewModel.ListingsPerPage = listingsToDisplay;
             return View(viewModel);
+        }
+
+        public ActionResult<object[]> Search(string searchQuery)
+        {
+            int maximumSearchQueryDistance = _configuration.MaxSearchQueryDistance;
+            var entitySearch = new EntitySearch<CommunityGroup>(_communityGroupRepo);
+
+            ICollection<object> dtos = new List<object>();
+            entitySearch.Search(searchQuery, maximumSearchQueryDistance).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
+            return dtos.ToArray();
         }
 
     }

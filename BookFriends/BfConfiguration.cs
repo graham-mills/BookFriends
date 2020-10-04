@@ -21,5 +21,6 @@ namespace BookFriends
         public int BrowseCommunitiesListingsPerPage { get => _configuration.GetValue<int>("BrowseCommunities_CommunitiesPaginationSize"); }
         public int ViewCommunityBooksPerPage { get => _configuration.GetValue<int>("ViewCommunity_BooksPaginationSize"); }
         public int ViewCommunityMembersPerPage { get => _configuration.GetValue<int>("ViewCommunity_MembersPaginationSize"); }
+        public int MaxSearchQueryDistance { get => _configuration.GetValue<int>("MaxSearchQueryDistance"); }
     }
 }

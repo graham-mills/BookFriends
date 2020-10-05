@@ -39,11 +39,10 @@ namespace BookFriends.Controllers
 
         public ActionResult<object[]> Search(string searchQuery)
         {
-            int maximumSearchQueryDistance = _configuration.MaxSearchQueryDistance;
             var entitySearch = new EntitySearch<CommunityGroup>(_communityGroupRepo);
 
             ICollection<object> dtos = new List<object>();
-            entitySearch.Search(searchQuery, maximumSearchQueryDistance).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
+            entitySearch.Search(searchQuery, _configuration.MaxSearchQueryResults).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
             return dtos.ToArray();
         }
 

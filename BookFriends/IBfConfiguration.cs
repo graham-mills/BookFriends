@@ -6,6 +6,6 @@
         int BrowseCommunitiesMembershipsPerPage { get; }
         int ViewCommunityBooksPerPage { get; }
         int ViewCommunityMembersPerPage { get; }
-        int MaxSearchQueryDistance { get; }
+        int MaxSearchQueryResults { get; }
     }
 }

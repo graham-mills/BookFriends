@@ -34,9 +34,14 @@ namespace BookFriendsDataAccess.Entities
             };
         }
 
-        public int CalculateQueryDistance(string query)
+        /// <summary>
+        /// Returns selected string data that we want the
+        /// entity to be discovered by when the user enters
+        /// a search query.
+        /// </summary>
+        public string[] GetSearchQueryableStrings()
         {
-            return Algorithms.CalculateLevenshteinDistance(Name.ToLower(), query.ToLower());
+            return new string[] { Name };
         }
     }
 }

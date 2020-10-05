@@ -7,10 +7,10 @@ namespace BookFriendsDataAccess
     public interface ISearchQueryableEntity
     {
         /// <summary>
-        /// Returns value representing the correlation between
-        /// entity and query string. Lower value equalling
-        /// higher correlation or likeness.
+        /// Returns selected string data that we want the
+        /// entity to be discovered by when the user enters
+        /// a search query. 
         /// </summary>
-        int CalculateQueryDistance(string query);
+        string[] GetSearchQueryableStrings();
     }
 }

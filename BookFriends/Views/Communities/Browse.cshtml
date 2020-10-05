@@ -5,12 +5,17 @@
 
 }
 
-    <div id="browse-communities" class="container">
-        <h3>Browse Communities</h3>
-        <input type="text" class="form-control" placeholder="Find a community.." aria-label="Find a community" aria-describedby="search-communities" />
-        <p class="text-secondary">Showing {{ communityListings.length > 0 ? "1-" : "" }}{{ communityListings.length }} of {{ totalCommunities }} communities</p>
+<div id="browse-communities" class="container">
+    <h3>Browse Communities</h3>
+    <div id="browse-communities-search-input" class="container">
+        <input type="text" class="form-control" placeholder="Find a community.." v-model="searchQuery" v-on:input="onSearchInputChanged" />
+    </div>
+    <div id="browse-communities-list" class="container">
+        <p class="text-secondary">
+            {{ listingsSummary }}
+        </p>
         <ul>
-            <li class="row mt-3 mb-3" v-for="listing in communityListings">
+            <li class="row mt-3 mb-3" v-for="listing in listings">
                 <div class="col-2 text-center">
                     <img class="img-thumbnail bf-thumb" />
                 </div>
@@ -28,17 +33,19 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div class="container text-center" v-if="displayViewMoreButton">
-            <button class="btn btn-success btn-sm" v-on:click="loadMoreListings">View More</button>
-        </div>
     </div>
+    <div id="browse-communities-next-page-button" class="container text-center">
+        <button class="btn btn-success btn-sm" v-on:click="onClick" v-if="displayButton">View More</button>
+    </div>
+
+</div>
 
 @section Scripts {
     <script src="~/lib/vue/vue.global.prod.js"></script>
     <script src="~/js/vm/communities-browse.js"></script>
     <script>
-        vm.communityListings = @Json.Serialize(Model.CommunityGroupDtos);
-        vm.totalCommunities = @Model.TotalCommunities;
-        vm.listingsPerPage = @Model.ListingsPerPage;
+        listingsVm.listings = @Json.Serialize(Model.CommunityGroupDtos);
+        listingsVm.totalListings = @Model.TotalCommunities;
+        listingsVm.listingsPerPage = @Model.ListingsPerPage;
     </script>
 }

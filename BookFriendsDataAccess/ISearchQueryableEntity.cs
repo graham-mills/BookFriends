@@ -11,6 +11,6 @@ namespace BookFriendsDataAccess
         /// entity to be discovered by when the user enters
         /// a search query. 
         /// </summary>
-        string[] GetSearchQueryableStrings();
+        IEnumerable<string> GetSearchQueryableStrings();
     }
 }

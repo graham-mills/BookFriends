@@ -16,8 +16,8 @@ namespace BookFriendsDataAccess.Entities
         [StringLength(100, MinimumLength = 10)]
         public String Name { get; set; }
         public String Description { get; set; }
+        public String Keywords { get; set; }
         public virtual ICollection<CommunityMember> CommunityMembers { get; set; }
-
         public CommunityGroup()
         {
             CommunityMembers = new List<CommunityMember>();
@@ -39,9 +39,12 @@ namespace BookFriendsDataAccess.Entities
         /// entity to be discovered by when the user enters
         /// a search query.
         /// </summary>
-        public string[] GetSearchQueryableStrings()
+        public IEnumerable<string> GetSearchQueryableStrings()
         {
-            return new string[] { Name };
+            var queryableStrings = new List<string>();
+            queryableStrings.Add(Name);
+            Keywords.Split(',').ToList().ForEach(w => queryableStrings.Add(w.Trim()));
+            return queryableStrings;
         }
     }
 }

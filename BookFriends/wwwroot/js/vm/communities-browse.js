@@ -5,7 +5,16 @@
 }
 
 const page = {
-    state: PageState.DISPLAY_PAGED_RESULTS
+    state: PageState.DISPLAY_PAGED_RESULTS,
+    observers: [],
+
+    changeState: function (newState) {
+        this.state = newState;
+        this.observers.forEach(o => o.onPageStateChanged(newState));
+    },
+    subscribeToStateChange: function (observer) {
+        this.observers.push(observer);
+    }
 }
 
 const listingsVm = Vue.createApp({
@@ -16,12 +25,12 @@ const listingsVm = Vue.createApp({
             listingsPage: 1,
             listingsPerPage: 0,
             listingsSummary: "",
-            pageState: page.pageState
+            displayLoadingSpinner: false
         };
     },
     methods: {
-        onPageStateChange(pageState) {
-
+        onPageStateChanged(pageState) {
+            this.displayLoadingSpinner = pageState === PageState.FETCHING_DATA;
         },
         updatePagedListings(listings) {
             listings.forEach(l => this.listings.push(l));
@@ -41,13 +50,11 @@ const listingsVm = Vue.createApp({
             this.listingsPage = 1;
         }
     },
-    computed: {
-        displayLoadingSpinner: function () {
-            return page.state === PageState.FETCHING_DATA;
-        }
-    },
     beforeUpdate: function () {
         this.updateListingsSummary();
+    },
+    mounted: function () {
+        page.subscribeToStateChange(this);
     }
 }).mount('#browse-communities-list');
 
@@ -58,7 +65,8 @@ const nextPageButtonVm = Vue.createApp({
         };
     },
     methods: {
-        onPageStateChange(pageState) {
+        onPageStateChanged(pageState) {
+            this.displayButton = pageState != PageState.FETCHING_DATA;
         },
         onClick() {
             this.fetchNextPage();
@@ -68,15 +76,18 @@ const nextPageButtonVm = Vue.createApp({
                 method: "GET"
             }).then(response => this.handleFetchNextPageResponse(response))
                 .then(data => this.handleFetchNextPageData(data));
-            page.state = PageState.FETCHING_DATA;
+            page.changeState(PageState.FETCHING_DATA);
         },
         handleFetchNextPageResponse(response) {
-            page.state = PageState.DISPLAY_PAGED_RESULTS;
+            page.changeState(PageState.DISPLAY_PAGED_RESULTS);
             return response.json();
         },
         handleFetchNextPageData(data) {
             listingsVm.updatePagedListings(data);
         }
+    },
+    mounted: function () {
+        page.subscribeToStateChange(this);
     }
 }).mount("#browse-communities-next-page-button"); 
 
@@ -105,7 +116,7 @@ const searchInputVm = Vue.createApp({
                     method: "GET"
                 }).then(response => this.handleSearchQueryResponse(response))
                     .then(data => this.handleSearchQueryData(data));
-                page.state = PageState.FETCHING_DATA;
+                page.changeState(PageState.FETCHING_DATA);
             }
             else {
                 listingsVm.listingsPage = 0;
@@ -113,7 +124,7 @@ const searchInputVm = Vue.createApp({
             }
         },
         handleSearchQueryResponse(response) {
-            page.state = PageState.DISPLAY_SEARCH_RESULTS;
+            page.changeState(PageState.DISPLAY_SEARCH_RESULTS);
             return response.json();
         },
         handleSearchQueryData(data) {

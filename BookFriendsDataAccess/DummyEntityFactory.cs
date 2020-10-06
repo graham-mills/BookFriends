@@ -141,23 +141,26 @@ namespace BookFriendsDataAccess
 
         private void CreateCommunityGroups()
         {
-            CommunityGroups.Add(CommunityType.Hogwarts, new CommunityGroup
+            CommunityGroups.Add(CommunityType.Askaban_Rehab, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
-                Name = "Hogwarts (Students)",
-                Description = "Slytherins not allowed."
+                Name = "Askaban Rehabilitation Group",
+                Description = "Looking for new members with an academic interest in the dark arts.",
+                Keywords = "dark,arts,prison"
             });
             CommunityGroups.Add(CommunityType.Lockhart_Society, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
                 Name = "Gilderoy Lockhart Appreciation Society",
-                Description = "Gilderoy Lockhart, Order of Merlin, Third Class, Honorary Member of the Dark Force Defence League, and five-time winner of Witch Weekly's Most Charming Smile Award."
+                Description = "Gilderoy Lockhart, Order of Merlin, Third Class, Honorary Member of the Dark Force Defence League, and five-time winner of Witch Weekly's Most Charming Smile Award.",
+                Keywords = "celebrity,wizard,author,fans"
             });
-            CommunityGroups.Add(CommunityType.Askaban_Rehab, new CommunityGroup
+            CommunityGroups.Add(CommunityType.Hogwarts, new CommunityGroup
             {
                 Id = Guid.NewGuid(),
-                Name = "Askaban Rehabilitation Group",
-                Description = "Looking for new members with an academic interest in the dark arts."
+                Name = "Hogwarts (Students)",
+                Description = "Slytherins not allowed.",
+                Keywords = "magic,school,potions,divination,transfiguration,herbology"
             });
         }
 

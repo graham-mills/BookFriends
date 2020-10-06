@@ -40,11 +40,9 @@ namespace BookFriends
         private int CountQueryWordHits(ISearchQueryableEntity entity, string[] queryWords)
         {
             int queryHits = 0;
-            string[] queryableStrings = entity.GetSearchQueryableStrings();
-            
             foreach(var word in queryWords)
             {
-                foreach(var queryableString in queryableStrings)
+                foreach(var queryableString in entity.GetSearchQueryableStrings())
                 {
                     if(queryableString.ToLower().Contains(word))
                     {

@@ -4,32 +4,54 @@
     ViewData["Title"] = Model.CommunityGroup.Name;
 }
 
-<div class="container">
-    <h3>@Model.CommunityGroup.Name</h3>
+<div class="container jumbotron">
+    <h3>@Model.CommunityGroup.Name <img class="bf-thumb" src="~/img/icon-people.svg" alt="icon-people" /></h3>
     <p>@Model.CommunityGroup.Description</p>
+    <hr />
+    <button class="btn btn-primary">Join this Community</button>
 </div>
-
-<div class="container">
-    <h4>Members</h4>
-    <p class="text-secondary">Showing @Model.Memberships.Count of @Model.TotalMembers members </p>
-    <ul>
-        @foreach (var member in Model.Memberships)
-        {
-            <li>@member.User.DisplayName</li>
-        }
-    </ul>
-</div>
-
-<div class="container">
-    <h4>Available Books</h4>
-    <p class="text-secondary">Showing @Model.PooledBooks.Count of @Model.TotalPooledBooks books </p>
-    <ul>
-        @foreach (var book in Model.PooledBooks)
-        {
-            <li>
-                <b>@book.OwnedBook.Book.Name</b>
-                <p class="text-secondary">@book.OwnedBook.Book.Authors.First().Author.LastName, @book.OwnedBook.Book.Authors.First().Author.FirstNames</p>
-            </li>
-        }
-    </ul>
+<hr />
+<div class="row">
+    <div class="container col-lg-3">
+        <h4>Members</h4>
+        <p class="text-secondary">Showing @Model.Memberships.Count of @Model.TotalMembers members </p>
+        <ul class="bf-list list-unstyled">
+            @foreach (var member in Model.Memberships)
+            {
+                <li class="media">
+                    <img class="bf-thumb bf-thumb-s img-thumbnail mr-2" src="~/img/icon-person.svg" alt="icon-person" />
+                    <div class="media-body">
+                        <h5>@member.User.DisplayName</h5>
+                    </div>
+                </li>
+            }
+        </ul>
+        <div class="text-center">
+            <button class="btn btn-link">View all</button>
+        </div>
+    </div>
+    <div class="container col-lg-9">
+        <div class="row">
+            <div class="col">
+                <h4>Available Books</h4>
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-success">Browse all books</button>
+            </div>
+        </div>
+        <p class="text-secondary">Showing @Model.PooledBooks.Count of @Model.TotalPooledBooks books </p>
+        <ul class="list-unstyled">
+            @foreach (var book in Model.PooledBooks)
+            {
+                <li class="media">
+                    <img class="bf-thumb bf-thumb-m img-thumbnail mr-3" src="~/img/icon-book.svg" alt="icon-book" />
+                    <div class="media-body">
+                        <h4 class="d-inline">@book.OwnedBook.Book.Name</h4>
+                        <p class="d-inline"><em>- @book.OwnedBook.Book.Authors.First().Author.FirstNames @book.OwnedBook.Book.Authors.First().Author.LastName</em></p>
+                        <p class="mt-2">Owned by <img src="~/img/icon-person.svg" alt="icon-person" />@book.CommunityMember.User.DisplayName</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
 </div>

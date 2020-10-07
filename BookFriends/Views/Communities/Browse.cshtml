@@ -8,7 +8,7 @@
 <div id="browse-communities" class="container">
     <h3>Browse Communities</h3>
     <div id="browse-communities-search-input" class="container">
-        <input type="text" class="form-control" placeholder="Find a community.." v-model="searchQuery" v-on:input="onSearchInputChanged" />
+        <input type="text" class="form-control" placeholder="Find a community.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
     </div>
     <div id="browse-communities-list" class="container">
         <p class="text-secondary">
@@ -33,15 +33,16 @@
         </div>
     </div>
     <div id="browse-communities-next-page-button" class="container text-center">
-        <button class="btn btn-success btn-sm" v-on:click="onClick" v-if="displayButton">View More</button>
+        <button class="btn btn-success btn-sm" v-on:click="onNextPageClick" v-if="displayNextPageButton">View More</button>
     </div>
 
 </div>
 
 @section Scripts {
     <script src="~/lib/vue/vue.global.prod.js"></script>
-    <script src="~/js/vm/communities-browse.js"></script>
+    <script src="~/js/vm/searchable-list-component.js"></script>
     <script>
+        const listingsVm = Vue.createApp(searchableListComponent).mount('#browse-communities');
         listingsVm.listings = @Json.Serialize(Model.CommunityGroupDtos);
         listingsVm.totalListings = @Model.TotalCommunities;
         listingsVm.listingsPerPage = @Model.ListingsPerPage;

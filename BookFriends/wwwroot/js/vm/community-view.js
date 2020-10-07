@@ -1,4 +1,4 @@
-﻿const PageState = {
+﻿const BookListings = {
     DISPLAY_PAGED_RESULTS: 0,
     DISPLAY_SEARCH_RESULTS: 1,
     FETCHING_DATA: 2
@@ -17,7 +17,7 @@ const page = {
     }
 }
 
-const listingsVm = Vue.createApp({
+const bookListingsVm = Vue.createApp({
     data() {
         return {
             listings: [],
@@ -56,7 +56,7 @@ const listingsVm = Vue.createApp({
     mounted: function () {
         page.subscribeToStateChange(this);
     }
-}).mount('#browse-communities-list');
+}).mount('#browse-books-list');
 
 const nextPageButtonVm = Vue.createApp({
     data() {
@@ -89,7 +89,7 @@ const nextPageButtonVm = Vue.createApp({
     mounted: function () {
         page.subscribeToStateChange(this);
     }
-}).mount("#browse-communities-next-page-button"); 
+}).mount("#browse-communities-next-page-button");
 
 
 const searchInputVm = Vue.createApp({

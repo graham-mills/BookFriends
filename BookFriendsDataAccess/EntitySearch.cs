@@ -31,7 +31,11 @@ namespace BookFriends
             string[] queryWords = searchQuery.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             _entityRepository.Get().ToList().ForEach(e => entityQueryResults.Add(e, CountQueryWordHits(e, queryWords)));
 
-            return entityQueryResults.Keys.Where(e => entityQueryResults[e] > 0).OrderBy(e => entityQueryResults[e]).Take(maxSearchResults).ToList();
+            return entityQueryResults.Keys.Where(e => entityQueryResults[e] > 0)
+                                          .OrderBy(e => entityQueryResults[e])
+                                          .Reverse()
+                                          .Take(maxSearchResults)
+                                          .ToList();
         }
 
         /// <summary>

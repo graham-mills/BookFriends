@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookFriends.ApiControllers.Dtos;
-using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,15 +19,18 @@ namespace BookFriends.ApiControllers
         private ILogger _logger { get; set; }
         private IBfConfiguration _configuration { get; set; }
         private IEntityRepository<PooledBook> _entityRepo { get; set; }
+        private IEntitySearch<PooledBook> _searchRepo { get; set; }
 
         public PooledBookController(
             ILogger<PooledBookController> logger,
             IBfConfiguration configuration,
-            IEntityRepository<PooledBook> entityRepo)
+            IEntityRepository<PooledBook> entityRepo,
+            IEntitySearch<PooledBook> searchRepo)
         {
             _logger = logger;
             _configuration = configuration;
             _entityRepo = entityRepo;
+            _searchRepo = searchRepo;
         }
 
         [HttpGet]
@@ -43,8 +47,7 @@ namespace BookFriends.ApiControllers
             }
             else
             {
-                var entitySearch = new EntitySearch<PooledBook>(_entityRepo);
-                var searchResults = entitySearch.Search(
+                var searchResults = _searchRepo.Search(
                     searchQuery: q,
                     resultsToTake: limit,
                     resultsToSkip: offset,

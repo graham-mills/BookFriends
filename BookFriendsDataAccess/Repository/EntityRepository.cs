@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace BookFriendsDataAccess
+namespace BookFriendsDataAccess.Repository
 {
     public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
     {
@@ -45,7 +45,7 @@ namespace BookFriendsDataAccess
                 query = query.Where(filter);
             }
 
-            if(skip != null && skip > 0)
+            if (skip != null && skip > 0)
             {
                 query = query.Skip((int)skip);
             }

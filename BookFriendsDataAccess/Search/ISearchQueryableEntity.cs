@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookFriendsDataAccess
+namespace BookFriendsDataAccess.Search
 {
     public interface ISearchQueryableEntity
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace BookFriendsDataAccess
+namespace BookFriendsDataAccess.Repository
 {
     public interface IEntityRepository<TEntity> where TEntity : class
     {

@@ -1,5 +1,7 @@
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +34,8 @@ namespace BookFriends
             services.AddScoped<IEntityRepository<CommunityMember>, EntityRepository<CommunityMember>>();
             services.AddScoped<IEntityRepository<PooledBook>, EntityRepository<PooledBook>>();
             services.AddScoped<IBfConfiguration, BfConfiguration>();
+            services.AddScoped<IEntitySearch<CommunityGroup>, EntitySearch<CommunityGroup>>();
+            services.AddScoped<IEntitySearch<PooledBook>, EntitySearch<PooledBook>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,7 +6,7 @@ using System.Text;
 namespace BookFriendsDataAccess
 {
     /// <summary>
-    /// This classes' purpose is simply to generate dummy entity data for initial dev database seeding
+    /// The purpose of this class is simply to generate dummy entity data for initial dev database seeding
     /// and unit testing.
     /// </summary>
     public class DummyEntityFactory

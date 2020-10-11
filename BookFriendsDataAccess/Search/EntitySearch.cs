@@ -1,17 +1,17 @@
-﻿using BookFriendsDataAccess;
+﻿using BookFriendsDataAccess.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BookFriends
+namespace BookFriendsDataAccess.Search
 {
     /// <summary>
     /// Class provides the utility to perform a basic text search of ISearchQueryableEntity's
     /// from their corresponding repositories.
     /// </summary>
-    public class EntitySearch<TEntity> where TEntity : class, ISearchQueryableEntity
+    public class EntitySearch<TEntity> : IEntitySearch<TEntity> where TEntity : class, ISearchQueryableEntity
     {
         private readonly IEntityRepository<TEntity> _entityRepository;
 
@@ -21,7 +21,7 @@ namespace BookFriends
         }
 
         /// <summary>
-        /// Attempts to composite a list of ISearchQueryableEntity objects by comparing
+        /// Attempts to compose a list of ISearchQueryableEntity objects by comparing
         /// their search queryable strings against a search query. 
         /// </summary>
         /// <returns>List of entities ordered by search query matches</returns>
@@ -53,11 +53,11 @@ namespace BookFriends
         private int CountQueryWordHits(ISearchQueryableEntity entity, string[] queryWords)
         {
             int queryHits = 0;
-            foreach(var word in queryWords)
+            foreach (var word in queryWords)
             {
-                foreach(var queryableString in entity.GetSearchQueryableStrings())
+                foreach (var queryableString in entity.GetSearchQueryableStrings())
                 {
-                    if(queryableString != null && queryableString.ToLower().Contains(word))
+                    if (queryableString != null && queryableString.ToLower().Contains(word))
                     {
                         ++queryHits;
                     }

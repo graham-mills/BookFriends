@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookFriends.ApiControllers.Dtos;
-using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,15 +18,18 @@ namespace BookFriends.ApiControllers
         private ILogger _logger { get; set; }
         private IBfConfiguration _configuration { get; set; }
         private IEntityRepository<CommunityGroup> _entityRepo { get; set; }
+        private IEntitySearch<CommunityGroup> _searchRepo { get; set; }
 
         public CommunityGroupController(
             ILogger<CommunityGroupController> logger,
             IBfConfiguration configuration,
-            IEntityRepository<CommunityGroup> entityRepo)
+            IEntityRepository<CommunityGroup> entityRepo,
+            IEntitySearch<CommunityGroup> searchRepo)
         {
             _logger = logger;
             _configuration = configuration;
             _entityRepo = entityRepo;
+            _searchRepo = searchRepo;
         }
 
         [HttpGet]
@@ -39,8 +43,7 @@ namespace BookFriends.ApiControllers
             }
             else
             {
-                var entitySearch = new EntitySearch<CommunityGroup>(_entityRepo);
-                var searchResults = entitySearch.Search(q, resultsToTake: limit, resultsToSkip: offset);
+                var searchResults = _searchRepo.Search(q, resultsToTake: limit, resultsToSkip: offset);
                 getResult.Data = searchResults.MatchedEntities.Select(e => new CommunityGroupDto(e));
                 getResult.TotalRecords = searchResults.TotalMatchedEntities;
             }

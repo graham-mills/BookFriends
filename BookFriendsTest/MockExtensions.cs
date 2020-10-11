@@ -1,5 +1,6 @@
 ﻿using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
 using Moq;
 using System;
 using System.Collections.Generic;

@@ -3,6 +3,8 @@ using BookFriends.ApiControllers;
 using BookFriends.ApiControllers.Dtos;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,6 +21,7 @@ namespace BookFriendsTest.ApiControllerTests
         private readonly Mock<IEntityRepository<CommunityGroup>> mockCommunityGroupRepo = new Mock<IEntityRepository<CommunityGroup>>();
         private readonly Mock<ILogger<CommunityGroupController>> mockLogger = new Mock<ILogger<CommunityGroupController>>();
         private readonly Mock<IBfConfiguration> mockConfiguration = new Mock<IBfConfiguration>();
+        private readonly Mock<IEntitySearch<CommunityGroup>> mockEntitySearch = new Mock<IEntitySearch<CommunityGroup>>();
 
         private CommunityGroupController uut;
         private DummyEntityFactory entityFactory;
@@ -32,7 +35,8 @@ namespace BookFriendsTest.ApiControllerTests
         [SetUp]
         public void Setup()
         {
-            uut = new CommunityGroupController(mockLogger.Object, mockConfiguration.Object, mockCommunityGroupRepo.Object);
+            uut = new CommunityGroupController(mockLogger.Object, mockConfiguration.Object,
+                                               mockCommunityGroupRepo.Object, mockEntitySearch.Object);
         }
 
         [TestCase(1, 0, 1, 1)]

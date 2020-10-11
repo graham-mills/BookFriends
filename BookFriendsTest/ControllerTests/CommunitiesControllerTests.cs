@@ -4,6 +4,7 @@ using BookFriends.Controllers;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;

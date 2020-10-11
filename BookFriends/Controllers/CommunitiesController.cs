@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BookFriends.ApiControllers.Dtos;
 using BookFriends.ViewModels;
-using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

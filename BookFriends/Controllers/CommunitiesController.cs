@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BookFriends.ApiControllers.Dtos;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
@@ -31,19 +32,10 @@ namespace BookFriends.Controllers
         {
             int listingsToDisplay = _configuration.BrowseCommunitiesListingsPerPage;
             var viewModel = new BrowseCommunitiesViewModel();
-            _communityGroupRepo.Get(take: listingsToDisplay).ToList().ForEach(cg => viewModel.CommunityGroupDtos.Add(cg.ToAnonymousDto()));
-            viewModel.TotalCommunities = _communityGroupRepo.Get().Count();
+            viewModel.CommunityGroups = _communityGroupRepo.Get(take: listingsToDisplay).Select(e => new CommunityGroupDto(e));
+            viewModel.TotalCommunityGroups = _communityGroupRepo.Get().Count();
             viewModel.ListingsPerPage = listingsToDisplay;
             return View(viewModel);
-        }
-
-        public ActionResult<object[]> Search(string searchQuery)
-        {
-            var entitySearch = new EntitySearch<CommunityGroup>(_communityGroupRepo);
-
-            ICollection<object> dtos = new List<object>();
-            entitySearch.Search(searchQuery, _configuration.MaxSearchQueryResults).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
-            return dtos.ToArray();
         }
 
     }

@@ -1,4 +1,5 @@
 using BookFriends;
+using BookFriends.ApiControllers;
 using BookFriends.Controllers;
 using BookFriends.ViewModels;
 using BookFriendsDataAccess;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace BookFriendsTest.ControllerTests
@@ -49,15 +51,16 @@ namespace BookFriendsTest.ControllerTests
         {
             // Arrange
             mockConfiguration.Setup(c => c.BrowseCommunitiesListingsPerPage).Returns(listingsPerPage);
-            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(groupsInRepo), listingsPerPage);
+            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(groupsInRepo), listingsPerPage, expectedGroupsReturned);
 
             // Act
             var result = uut.Browse() as ViewResult;
 
             // Assert
             var viewModel = result.Model as BrowseCommunitiesViewModel;
-            Assert.AreEqual(expectedGroupsReturned, viewModel.CommunityGroupDtos.Count);
+            Assert.AreEqual(expectedGroupsReturned, viewModel.CommunityGroups.Count());
             Assert.AreEqual(listingsPerPage, viewModel.ListingsPerPage);
         }
+
     }
 }

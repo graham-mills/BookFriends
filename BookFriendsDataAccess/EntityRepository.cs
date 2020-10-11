@@ -97,5 +97,10 @@ namespace BookFriendsDataAccess
             }
             _context.Set<TEntity>().Remove(entity);
         }
+
+        public int Count()
+        {
+            return _context.Set<TEntity>().Count();
+        }
     }
 }

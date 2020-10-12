@@ -95,31 +95,36 @@ namespace BookFriendsDataAccess
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Gilderoy",
-                LastName = "Lockhart"
+                LastName = "Lockhart",
+                Books = new List<AuthorBook>()
             });
             Authors.Add(AuthorType.Borage, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Libatius",
-                LastName = "Borage"
+                LastName = "Borage",
+                Books = new List<AuthorBook>()
             });
             Authors.Add(AuthorType.Riddle, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Tom",
-                LastName = "Riddle"
+                LastName = "Riddle",
+                Books = new List<AuthorBook>()
             });
             Authors.Add(AuthorType.Bourne, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Phineas",
-                LastName = "Bourne"
+                LastName = "Bourne",
+                Books = new List<AuthorBook>()
             });
             Authors.Add(AuthorType.Crouch, new Author
             {
                 Id = Guid.NewGuid(),
                 FirstNames = "Bartemius",
-                LastName = "Crouch Junior"
+                LastName = "Crouch Junior",
+                Books = new List<AuthorBook>()
             });
         }
 
@@ -135,7 +140,9 @@ namespace BookFriendsDataAccess
         private void CreateBook(Guid id, BookType bookType, string name, AuthorType authorType)
         {
             var book = new Book() { Id = id, Name = name, Authors = new List<AuthorBook>() };
-            book.Authors.Add(new AuthorBook { Author = Authors[authorType], Book = book });
+            var authorBook = new AuthorBook { Author = Authors[authorType], Book = book };
+            book.Authors.Add(authorBook);
+            Authors[authorType].Books.Add(authorBook);
             Books.Add(bookType, book);
         }
 
@@ -255,15 +262,16 @@ namespace BookFriendsDataAccess
             member.Id = Guid.NewGuid();
             member.Role = CommunityMember.MembershipRole.Member;
             member.CommunityGroup = CommunityGroups[communityType];
+            member.User = Users[userType];
 
             PooledBook pooledBook;
             foreach (var ownedBook in Users[userType].OwnedBooks)
             {
-
                 pooledBook = new PooledBook
                 {
                     Id = Guid.NewGuid(),
-                    OwnedBook = ownedBook
+                    OwnedBook = ownedBook,
+                    CommunityMember = member
                 };
                 member.PooledBooks.Add(pooledBook);
                 PooledBooks.Add(pooledBook);

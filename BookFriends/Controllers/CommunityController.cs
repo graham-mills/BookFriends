@@ -61,7 +61,8 @@ namespace BookFriends.Controllers
                 PooledBooks = pooledBooks.Select(e => new PooledBookDto(e)),
                 TotalMembers = communityGroup.CommunityMembers.Count,
                 TotalPooledBooks = totalPooledBooks,
-                BookListingsPerPage = booksToDisplay
+                BookListingsPerPage = booksToDisplay,
+                MemberListingsPerPage = membersToDisplay
             };
 
             return View(viewModel);

@@ -8,26 +8,23 @@
     <h3>@Model.CommunityGroup.Name <img class="bf-thumb" src="~/img/icon-people.svg" alt="icon-people" /></h3>
     <p>@Model.CommunityGroup.Description</p>
     <hr />
-    <button class="btn btn-primary">Join this Community</button>
+    <a class="btn btn-primary" asp-controller="Community" asp-action="Join" asp-route-id="@Model.CommunityGroup.Id">Join this Community</a>
 </div>
 <hr />
 <div class="row">
-    <div class="container col-lg-3">
+    <div id="browse-community-members" class="container col-lg-3">
         <h4>Members</h4>
-        <p class="text-secondary">Showing @Model.Members.Count() of @Model.TotalMembers members </p>
+        <p class="text-secondary">{{ statusText }}</p>
         <ul class="bf-list list-unstyled">
-            @foreach (var member in Model.Members)
-            {
-                <li class="media">
-                    <img class="bf-thumb bf-thumb-s img-thumbnail mr-2" src="~/img/icon-person.svg" alt="icon-person" />
-                    <div class="media-body">
-                        <h5>@member.Name</h5>
-                    </div>
-                </li>
-            }
+            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
+                <img class="bf-thumb bf-thumb-s img-thumbnail mr-2" src="~/img/icon-person.svg" alt="icon-person" />
+                <div class="media-body">
+                    <h6>{{ listItem.name }}</h6>
+                </div>
+            </li>
         </ul>
         <div class="text-center">
-            <button class="btn btn-link">View all</button>
+            <button class="btn btn-link" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View more</button>
         </div>
     </div>
     <hr />
@@ -37,12 +34,12 @@
                 <h4>Available Books</h4>
             </div>
             <div class="col text-right">
-                <input type="text" class="form-control" placeholder="Browse community books.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
+                <input type="text" class="form-control" placeholder="Search community books.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
             </div>
         </div>
         <p class="text-secondary">{{ statusText }}</p>
         <ul class="list-unstyled">
-            <li class="media" v-for="listItem in displayedListItems">
+            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
                 <img class="bf-thumb bf-thumb-m img-thumbnail mr-3" src="~/img/icon-book.svg" alt="icon-book" />
                 <div class="media-body">
                     <h4 class="d-inline"><a v-bind:href="'/Community/Book/' + listItem.id">{{ listItem.name}}</a></h4>
@@ -89,11 +86,24 @@
     <script src="~/lib/vue/vue.global.prod.js"></script>
     <script src="~/js/vm/searchable-list-component.js"></script>
     <script>
-        const listingsVm = Vue.createApp(searchableListComponent).mount('#browse-community-books');
-        listingsVm.updateListItems(1, @Json.Serialize(Model.PooledBooks));
-        listingsVm.apiUrl = "/api/pooledbook?community=@Model.CommunityGroup.Id&";
-        listingsVm.totalListPages = @Math.Ceiling((double) Model.TotalPooledBooks / Model.BookListingsPerPage);
-        listingsVm.listPageSize = @Model.BookListingsPerPage;
-        listingsVm.changePage(1);
+
+        bookListingsComponent = {};
+        $.extend(bookListingsComponent, searchableListComponent);
+        const bookListingsVm = Vue.createApp(bookListingsComponent).mount('#browse-community-books');
+        bookListingsVm.updateListItems(1, @Json.Serialize(Model.PooledBooks));
+        bookListingsVm.apiUrl = "/api/pooledbook?community=@Model.CommunityGroup.Id&";
+        bookListingsVm.totalListPages = @Math.Ceiling((double) Model.TotalPooledBooks / Model.BookListingsPerPage);
+        bookListingsVm.listPageSize = @Model.BookListingsPerPage;
+        bookListingsVm.changePage(1);
+
+        memberListingsComponent = {};
+        $.extend(memberListingsComponent, searchableListComponent);
+        const memberListingsVm = Vue.createApp(memberListingsComponent).mount('#browse-community-members');
+        memberListingsVm.updateListItems(1, @Json.Serialize(Model.Members));
+        memberListingsVm.apiUrl = "/api/communitymember?community=@Model.CommunityGroup.Id&";
+        memberListingsVm.totalListPages = @Math.Ceiling((double) Model.TotalMembers / Model.MemberListingsPerPage);
+        memberListingsVm.listPageSize = @Model.MemberListingsPerPage;
+        memberListingsVm.endlessScrolling = true;
+        memberListingsVm.changePage(1);
     </script>
 }

@@ -16,5 +16,6 @@ namespace BookFriends.ViewModels
         public int TotalPooledBookPages { get; set; }
         public int TotalMembers { get; set; }
         public int BookListingsPerPage { get; set; }
+        public int MemberListingsPerPage { get; set; }
     }
 }

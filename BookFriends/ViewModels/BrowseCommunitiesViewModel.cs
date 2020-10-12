@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using BookFriends.ApiControllers.Dtos;
+using BookFriendsDataAccess.Entities;
+using System.Collections.Generic;
 namespace BookFriends.ViewModels
 {
     public class BrowseCommunitiesViewModel
     {
         public BrowseCommunitiesViewModel()
         {
-            CommunityGroupDtos = new List<object>();
-            MembershipDtos = new List<object>();
+            CommunityGroups = new List<CommunityGroupDto>();
         }
-        public List<object> CommunityGroupDtos { get; set; }
-        public List<object> MembershipDtos { get; set; }
-        public int TotalCommunities { get; set; }
+        public IEnumerable<CommunityGroupDto> CommunityGroups { get; set; }
+        public int TotalCommunityGroups { get; set; }
         public int ListingsPerPage { get; set; }
     }
 }

@@ -1,15 +1,18 @@
-using BookFriends;
+﻿using BookFriends;
 using BookFriends.ApiControllers;
-using BookFriends.Controllers;
-using BookFriends.ViewModels;
+using BookFriends.ApiControllers.Dtos;
 using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BookFriendsTest.ApiControllerTests
 {
@@ -18,7 +21,8 @@ namespace BookFriendsTest.ApiControllerTests
         private readonly Mock<IEntityRepository<CommunityGroup>> mockCommunityGroupRepo = new Mock<IEntityRepository<CommunityGroup>>();
         private readonly Mock<ILogger<CommunityGroupController>> mockLogger = new Mock<ILogger<CommunityGroupController>>();
         private readonly Mock<IBfConfiguration> mockConfiguration = new Mock<IBfConfiguration>();
-       
+        private readonly Mock<IEntitySearch<CommunityGroup>> mockEntitySearch = new Mock<IEntitySearch<CommunityGroup>>();
+
         private CommunityGroupController uut;
         private DummyEntityFactory entityFactory;
 
@@ -31,46 +35,24 @@ namespace BookFriendsTest.ApiControllerTests
         [SetUp]
         public void Setup()
         {
-            uut = new CommunityGroupController(mockLogger.Object, mockConfiguration.Object, mockCommunityGroupRepo.Object);
-        }
-        
-        [TestCase(0, 1, 3, 0)]
-        [TestCase(1, 1, 3, 1)]
-        [TestCase(3, 1, 3, 3)]
-        [TestCase(3, 1, 2, 2)]
-        [TestCase(1, 3, 3, 1)]
-        [TestCase(1, 1, 0, 0)]
-        public void TestParameterisedGet(int itemsToGet, int pageNumber, int itemsInRepo, int expectedItemsReturned)
-        {
-            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(itemsInRepo), itemsToGet);
-
-            ActionResult<object[]> result = uut.Get(itemsToGet, pageNumber);
-
-            Assert.AreEqual(expectedItemsReturned, result.Value.Length);
+            uut = new CommunityGroupController(mockLogger.Object, mockConfiguration.Object,
+                                               mockCommunityGroupRepo.Object, mockEntitySearch.Object);
         }
 
-        [Test]
-        public void TestParameterisedGetPageZero()
+        [TestCase(1, 0, 1, 1)]
+        [TestCase(1, 0, 0, 0)]
+        [TestCase(1, 0, 2, 1)]
+        [TestCase(2, 0, 1, 1)]
+        [TestCase(1, 1, 2, 1)]
+        [TestCase(1, 1, 1, 0)]
+        public void GetWithoutQuery(int limit, int offset, int itemsInRepo, int expectedItemsReturned)
         {
-            int itemsInRepo = 1;
-            int itemsToGet = 1;
-            int pageNumber = 0;
-            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(itemsInRepo), itemsInRepo);
+            mockConfiguration.Setup(m => m.BrowseCommunitiesListingsPerPage).Returns(limit);
+            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(itemsInRepo), limit, expectedItemsReturned);
 
-            ActionResult<object[]> result = uut.Get(itemsToGet, pageNumber);
+            GetResult<CommunityGroupDto> result = uut.Get(null, limit, offset);
 
-            Assert.IsNull(result.Value);
-        }
-
-        [Test]
-        public void TestParameterlessGet()
-        {
-            int itemsInRepo = 3;
-            mockCommunityGroupRepo.SetupGet(entityFactory.CommunityGroups.Values.Take(itemsInRepo), itemsInRepo);
-
-            ActionResult<object[]> result = uut.Get();
-
-            Assert.AreEqual(result.Value.Length, 0);
+            Assert.AreEqual(expectedItemsReturned, result.Data.Count());
         }
     }
 }

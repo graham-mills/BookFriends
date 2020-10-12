@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookFriends.ApiControllers.Dtos;
 using BookFriends.ViewModels;
-using BookFriendsDataAccess;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -50,13 +51,18 @@ namespace BookFriends.Controllers
             foreach (var member in communityGroup.CommunityMembers)
                 totalPooledBooks += member.PooledBooks.Count;
 
+            var memberships = _communityMemberRepo.Get(filter: m => m.CommunityGroup.Id.Equals(communityGroup.Id), take: membersToDisplay).ToList();
+            var pooledBooks = _pooledBookRepo.Get(filter: b => b.CommunityMember.CommunityGroup.Id.Equals(communityGroup.Id), take: booksToDisplay).ToList();
+
             var viewModel = new CommunityViewModel()
             {
-                CommunityGroup = communityGroup,
-                Memberships = _communityMemberRepo.Get(filter: m => m.CommunityGroup.Id.Equals(communityGroup.Id), take: membersToDisplay).ToList(),
-                PooledBooks = _pooledBookRepo.Get(filter: b => b.CommunityMember.CommunityGroup.Id.Equals(communityGroup.Id), take: booksToDisplay).ToList(),
+                CommunityGroup = new CommunityGroupDto(communityGroup),
+                Members = memberships.Select(e => new CommunityMemberDto(e)),
+                PooledBooks = pooledBooks.Select(e => new PooledBookDto(e)),
                 TotalMembers = communityGroup.CommunityMembers.Count,
-                TotalPooledBooks = totalPooledBooks
+                TotalPooledBooks = totalPooledBooks,
+                BookListingsPerPage = booksToDisplay,
+                MemberListingsPerPage = membersToDisplay
             };
 
             return View(viewModel);

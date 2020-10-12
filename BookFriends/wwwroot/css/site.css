@@ -74,7 +74,20 @@ body {
 -------------------------------------------------- */
 img.bf-thumb {
     background-color: #F0F0F0;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+}
+
+img.bf-thumb-s {
+    width:1.5rem;
+}
+
+img.bf-thumb-m {
+    width:2.2rem;
+}
+
+img.bf-thumb-l {
+    width:3rem;
+}
+
+.bf-border {
+    1px solid: #e9ecef;
 }

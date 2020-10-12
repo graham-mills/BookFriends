@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BookFriendsDataAccess.Search;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,17 +25,6 @@ namespace BookFriendsDataAccess.Entities
             CommunityMembers = new List<CommunityMember>();
         }
 
-        public object ToAnonymousDto()
-        {
-            return new
-            {
-                id = Id.ToString(),
-                name = Name,
-                description = Description,
-                memberCount = CommunityMembers.Count
-            };
-        }
-
         /// <summary>
         /// Returns selected string data that we want the
         /// entity to be discovered by when the user enters
@@ -45,6 +36,21 @@ namespace BookFriendsDataAccess.Entities
             queryableStrings.Add(Name);
             Keywords.Split(',').ToList().ForEach(w => queryableStrings.Add(w.Trim()));
             return queryableStrings;
+        }
+
+        /// <summary>
+        /// Convert object to JSON string
+        /// </summary>
+        /// <returns>JSON object</returns>
+        public string SerializeIntoDTO()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                id = Id.ToString(),
+                name = Name,
+                description = Description,
+                memberCount = CommunityMembers.Count
+            });
         }
     }
 }

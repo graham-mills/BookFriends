@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookFriendsDataAccess;
+using BookFriends.ApiControllers.Dtos;
 using BookFriendsDataAccess.Entities;
+using BookFriendsDataAccess.Repository;
+using BookFriendsDataAccess.Search;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace BookFriends.ApiControllers
@@ -14,53 +15,40 @@ namespace BookFriends.ApiControllers
     [ApiController]
     public class CommunityGroupController : ControllerBase
     {
-        private readonly ILogger<CommunityGroupController> _logger;
-        private readonly IEntityRepository<CommunityGroup> _entityRepo;
-        private readonly IBfConfiguration _configuration;
+        private ILogger _logger { get; set; }
+        private IBfConfiguration _configuration { get; set; }
+        private IEntityRepository<CommunityGroup> _entityRepo { get; set; }
+        private IEntitySearch<CommunityGroup> _searchRepo { get; set; }
 
-        public CommunityGroupController(ILogger<CommunityGroupController> logger, IBfConfiguration configuration, IEntityRepository<CommunityGroup> entityRepo)
+        public CommunityGroupController(
+            ILogger<CommunityGroupController> logger,
+            IBfConfiguration configuration,
+            IEntityRepository<CommunityGroup> entityRepo,
+            IEntitySearch<CommunityGroup> searchRepo)
         {
             _logger = logger;
             _configuration = configuration;
             _entityRepo = entityRepo;
+            _searchRepo = searchRepo;
         }
 
-        // GET: api/<CommunityGroupApiController>
         [HttpGet]
-        public ActionResult<object[]> Get(int items = 0, int page = 1)
+        public GetResult<CommunityGroupDto> Get(string? q, int limit, int offset)
         {
-            if (page < 1) return BadRequest(page);
+            var getResult = new GetResult<CommunityGroupDto>();
+            if (q.IsNullOrEmpty())
+            {
+                getResult.TotalRecords = _entityRepo.Count();
+                getResult.Data = _entityRepo.Get(take: limit, skip: offset).Select(e => new CommunityGroupDto(e));
+            }
+            else
+            {
+                var searchResults = _searchRepo.Search(q, resultsToTake: limit, resultsToSkip: offset);
+                getResult.Data = searchResults.MatchedEntities.Select(e => new CommunityGroupDto(e));
+                getResult.TotalRecords = searchResults.TotalMatchedEntities;
+            }
 
-
-            ICollection<object> dtos = new List<object>();
-            int itemsToSkip = (page - 1) * items;
-            _entityRepo.Get(take: items, skip: itemsToSkip).ToList().ForEach(cg => dtos.Add(cg.ToAnonymousDto()));
-            return dtos.ToArray();
-        }
-
-        // GET api/<CommunityGroupApiController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<CommunityGroupApiController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<CommunityGroupApiController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<CommunityGroupApiController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return getResult;
         }
     }
 }

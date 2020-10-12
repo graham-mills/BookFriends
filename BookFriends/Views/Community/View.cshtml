@@ -4,32 +4,106 @@
     ViewData["Title"] = Model.CommunityGroup.Name;
 }
 
-<div class="container">
-    <h3>@Model.CommunityGroup.Name</h3>
+<div class="container jumbotron">
+    <h3>@Model.CommunityGroup.Name <img class="bf-thumb" src="~/img/icon-people.svg" alt="icon-people" /></h3>
     <p>@Model.CommunityGroup.Description</p>
+    <hr />
+    <a class="btn btn-primary" asp-controller="Community" asp-action="Join" asp-route-id="@Model.CommunityGroup.Id">Join this Community</a>
 </div>
-
-<div class="container">
-    <h4>Members</h4>
-    <p class="text-secondary">Showing @Model.Memberships.Count of @Model.TotalMembers members </p>
-    <ul>
-        @foreach (var member in Model.Memberships)
-        {
-            <li>@member.User.DisplayName</li>
-        }
-    </ul>
-</div>
-
-<div class="container">
-    <h4>Available Books</h4>
-    <p class="text-secondary">Showing @Model.PooledBooks.Count of @Model.TotalPooledBooks books </p>
-    <ul>
-        @foreach (var book in Model.PooledBooks)
-        {
-            <li>
-                <b>@book.OwnedBook.Book.Name</b>
-                <p class="text-secondary">@book.OwnedBook.Book.Authors.First().Author.LastName, @book.OwnedBook.Book.Authors.First().Author.FirstNames</p>
+<hr />
+<div class="row">
+    <div id="browse-community-members" class="container col-lg-3">
+        <h4>Members</h4>
+        <p class="text-secondary">{{ statusText }}</p>
+        <ul class="bf-list list-unstyled">
+            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
+                <img class="bf-thumb bf-thumb-s img-thumbnail mr-2" src="~/img/icon-person.svg" alt="icon-person" />
+                <div class="media-body">
+                    <h6>{{ listItem.name }}</h6>
+                </div>
             </li>
-        }
-    </ul>
+        </ul>
+        <div class="text-center">
+            <button class="btn btn-link" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View more</button>
+        </div>
+    </div>
+    <hr />
+    <div id="browse-community-books" class="container col-lg-9">
+        <div class="row">
+            <div class="col">
+                <h4>Available Books</h4>
+            </div>
+            <div class="col text-right">
+                <input type="text" class="form-control" placeholder="Search community books.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
+            </div>
+        </div>
+        <p class="text-secondary">{{ statusText }}</p>
+        <ul class="list-unstyled">
+            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
+                <img class="bf-thumb bf-thumb-m img-thumbnail mr-3" src="~/img/icon-book.svg" alt="icon-book" />
+                <div class="media-body">
+                    <h4 class="d-inline"><a v-bind:href="'/Community/Book/' + listItem.id">{{ listItem.name}}</a></h4>
+                    <p class="d-inline">
+                        <em>
+                            - {{listItem.authors[0].firstNames}} {{listItem.authors[0].lastName}}
+                        </em>
+                    </p>
+                    <p class="mt-2">Owned by <img src="~/img/icon-person.svg" alt="icon-person" />{{ listItem.owner.name}}</p>
+                </div>
+            </li>
+        </ul>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" v-bind:class="{ disabled: listPage === 1}">
+                    <a class="page-link" href="#" tabindex="-1" v-bind:aria-disabled="listPage === 1" v-on:click="onPrevPageClick">Previous</a>
+                </li>
+                <li class="page-item" v-if="listPage > 1">
+                    <a class="page-link" href="#" v-on:click="onGetPageClick(1)">1</a>
+                </li>
+                <li class="page-item disabled" v-if="listPage > 1">
+                    <a class="page-link" area-disabled="true">..</a>
+                </li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ listPage }}<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item disabled" v-if="listPage < totalListPages">
+                    <a class="page-link" area-disabled="true">..</a>
+                </li>
+                <li class="page-item" v-if="listPage < totalListPages">
+                    <a class="page-link" v-on:click="onGetPageClick(totalListPages)">{{ totalListPages }}</a>
+                </li>
+                <li class="page-item" v-bind:class="{ disabled: listPage === totalListPages}">
+                    <a class="page-link" href="#" v-bind:aria-disabled="listPage === totalListPages" v-on:click="onNextPageClick">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/lib/vue/vue.global.prod.js"></script>
+    <script src="~/js/vm/searchable-list-component.js"></script>
+    <script>
+
+        bookListingsComponent = {};
+        $.extend(bookListingsComponent, searchableListComponent);
+        const bookListingsVm = Vue.createApp(bookListingsComponent).mount('#browse-community-books');
+        bookListingsVm.updateListItems(1, @Json.Serialize(Model.PooledBooks));
+        bookListingsVm.apiUrl = "/api/pooledbook?community=@Model.CommunityGroup.Id&";
+        bookListingsVm.totalListPages = @Math.Ceiling((double) Model.TotalPooledBooks / Model.BookListingsPerPage);
+        bookListingsVm.listPageSize = @Model.BookListingsPerPage;
+        bookListingsVm.changePage(1);
+
+        memberListingsComponent = {};
+        $.extend(memberListingsComponent, searchableListComponent);
+        const memberListingsVm = Vue.createApp(memberListingsComponent).mount('#browse-community-members');
+        memberListingsVm.updateListItems(1, @Json.Serialize(Model.Members));
+        memberListingsVm.apiUrl = "/api/communitymember?community=@Model.CommunityGroup.Id&";
+        memberListingsVm.totalListPages = @Math.Ceiling((double) Model.TotalMembers / Model.MemberListingsPerPage);
+        memberListingsVm.listPageSize = @Model.MemberListingsPerPage;
+        memberListingsVm.endlessScrolling = true;
+        memberListingsVm.changePage(1);
+    </script>
+}

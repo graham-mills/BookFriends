@@ -1,0 +1,3 @@
+# Client-side libraries should not in source control,
+# they may be restored from libman.json
+wwwroot/lib

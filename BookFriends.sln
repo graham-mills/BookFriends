@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookFriends", "BookFriends\BookFriends.csproj", "{C4701905-5EF8-4657-8B22-A3CAC114C88B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFriendsDataAccess", "BookFriendsDataAccess\BookFriendsDataAccess.csproj", "{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookFriendsDataAccess", "BookFriendsDataAccess\BookFriendsDataAccess.csproj", "{C6E75408-BB8D-4E21-B2EC-4C424D9B2E98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFriendsTest", "BookFriendsTest\BookFriendsTest.csproj", "{C5DBBC72-2856-4B82-81F5-D725750F6F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookFriendsTest", "BookFriendsTest\BookFriendsTest.csproj", "{C5DBBC72-2856-4B82-81F5-D725750F6F89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

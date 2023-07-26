@@ -2,7 +2,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>BookFriends is a service that makes it easier to swap your finished books for new books that you want to read.</p>
-</div>
+<img class="w-100 mb-5" src="~/img/bg-books.jpg" />
+
+<h1 class="display-1 fw-bold">Welcome readers!</h1>
+<p class="lh-lg fs-5">
+    <em>BookFriends</em> is a platform for swapping books, giving your finished books a second life with somebody who's eager to read them and giving you your next literary fix.
+    <br />Do you have an interest in grimdark science-fiction, growing house-plants or just want to exchange textbooks with others at your school or university? Then <a asp-controller="Communities" asp-action="Browse">join</a> or <a asp-controller="Community" asp-action="Create">create</a> a community of like-minded book lovers and start freshening up those bookshelves.
+</p>

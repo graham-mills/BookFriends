@@ -4,81 +4,90 @@
     ViewData["Title"] = Model.CommunityGroup.Name;
 }
 
-<div class="container jumbotron">
-    <h3>@Model.CommunityGroup.Name <img class="bf-thumb" src="~/img/icon-people.svg" alt="icon-people" /></h3>
-    <p>@Model.CommunityGroup.Description</p>
-    <hr />
-    <a class="btn btn-primary" asp-controller="Community" asp-action="Join" asp-route-id="@Model.CommunityGroup.Id">Join this Community</a>
+<div class="row p-5 mb-4 bg-body-tertiary">
+    <div class="col">
+        <h3 class="display-3 fw-bold">@Model.CommunityGroup.Name </h3>
+        <img class="d-inline-block" src="~/img/icon-people.svg" alt="icon-people" />
+        <span title="Total members">@Model.TotalMembers</span>
+        <img class="ms-1 d-inline-block" src="~/img/icon-book.svg" alt="icon-book" />
+        <span title="Total pooled books">@Model.TotalPooledBooks</span>
+    </div>
+    <hr class="my-2" />
+    <div class="col-md-8">
+        <p class="text-justify">@Model.CommunityGroup.Description</p>
+        <a class="btn btn-primary" asp-controller="Community" asp-action="Join" asp-route-id="@Model.CommunityGroup.Id">Join this Community</a>
+    </div>
 </div>
 <hr />
 <div class="row">
-    <div id="browse-community-members" class="container col-lg-3">
-        <h4>Members</h4>
-        <p class="text-secondary">{{ statusText }}</p>
-        <ul class="bf-list list-unstyled">
-            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
-                <img class="bf-thumb bf-thumb-s img-thumbnail mr-2" src="~/img/icon-person.svg" alt="icon-person" />
-                <div class="media-body">
-                    <h6>{{ listItem.name }}</h6>
-                </div>
-            </li>
-        </ul>
-        <div class="text-center">
-            <button class="btn btn-link" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View more</button>
+    <div id="browse-community-members" class="col-lg-3">
+        <div class="row">
+
+            <h4>Members</h4>
+            <p>{{ statusText }}</p>
+            <ul class="list-unstyled">
+                <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
+                    <img class="bf-thumb bf-thumb-s img-thumbnail d-inline" src="~/img/icon-person.svg" alt="icon-person" />
+                    <span class="ps-1">{{ listItem.name }}</span>
+                </li>
+            </ul>
+            <div class="text-center">
+                <button class="btn btn-link" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View more</button>
+            </div>
         </div>
     </div>
-    <hr />
-    <div id="browse-community-books" class="container col-lg-9">
+    <hr class="d-lg-none" />
+    <div id="browse-community-books" class="col-lg-9">
         <div class="row">
             <div class="col">
-                <h4>Available Books</h4>
+                <h4 class="py-1 d-inline">Available Books</h4>
             </div>
             <div class="col text-right">
                 <input type="text" class="form-control" placeholder="Search community books.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
             </div>
         </div>
-        <p class="text-secondary">{{ statusText }}</p>
-        <ul class="list-unstyled">
-            <li class="media" v-for="listItem in displayedListItems" :key="listItem.id">
-                <img class="bf-thumb bf-thumb-m img-thumbnail mr-3" src="~/img/icon-book.svg" alt="icon-book" />
-                <div class="media-body">
-                    <h4 class="d-inline"><a v-bind:href="'/Community/Book/' + listItem.id">{{ listItem.name}}</a></h4>
-                    <p class="d-inline">
-                        <em>
-                            - {{listItem.authors[0].firstNames}} {{listItem.authors[0].lastName}}
-                        </em>
-                    </p>
-                    <p class="mt-2">Owned by <img src="~/img/icon-person.svg" alt="icon-person" />{{ listItem.owner.name}}</p>
-                </div>
-            </li>
-        </ul>
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item" v-bind:class="{ disabled: listPage === 1}">
-                    <a class="page-link" href="#" tabindex="-1" v-bind:aria-disabled="listPage === 1" v-on:click="onPrevPageClick">Previous</a>
-                </li>
-                <li class="page-item" v-if="listPage > 1">
-                    <a class="page-link" href="#" v-on:click="onGetPageClick(1)">1</a>
-                </li>
-                <li class="page-item disabled" v-if="listPage > 1">
-                    <a class="page-link" area-disabled="true">..</a>
-                </li>
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">{{ listPage }}<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="page-item disabled" v-if="listPage < totalListPages">
-                    <a class="page-link" area-disabled="true">..</a>
-                </li>
-                <li class="page-item" v-if="listPage < totalListPages">
-                    <a class="page-link" v-on:click="onGetPageClick(totalListPages)">{{ totalListPages }}</a>
-                </li>
-                <li class="page-item" v-bind:class="{ disabled: listPage === totalListPages}">
-                    <a class="page-link" href="#" v-bind:aria-disabled="listPage === totalListPages" v-on:click="onNextPageClick">
-                        Next
-                    </a>
+        <div class="row">
+            <p>{{ statusText }}</p>
+
+            <ul class="list-unstyled">
+                <li v-for="listItem in displayedListItems" :key="listItem.id">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <img class="bf-thumb bf-thumb-m img-thumbnail mr-3" src="~/img/icon-book.svg" alt="icon-book" />
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="d-inline"><a v-bind:href="'/Community/Book/' + listItem.id">{{ listItem.name}}</a></h6>
+                            <p class="d-inline">
+                                <em>
+                                    - {{listItem.authors[0].firstNames}} {{listItem.authors[0].lastName}}
+                                </em>
+                            </p>
+                            <p class="mt-2">Owned by <img src="~/img/icon-person.svg" alt="icon-person" />{{ listItem.owner.name}}</p>
+                        </div>
+                    </div>
                 </li>
             </ul>
-        </nav>
+            <div class="pagination justify-content-center">
+                <div class="page-item" v-bind:class="{ disabled: listPage === 1}" v-if="totalListPages > 1">
+                    <a class="page-link" href="#" v-bind:aria-disabled="listPage === 1" v-on:click="onPrevPageClick" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </div>
+
+                <span v-for="pageNumber in totalListPages">
+                    <div class="page-item" v-bind:class="{active: pageNumber === listPage}" v-bind:aria-current="{page: pageNumber === listPage}">
+                        <a class="page-link" href="#" v-on:click="onGetPageClick(pageNumber)">{{ pageNumber }}</a>
+                    </div>
+                </span>
+
+
+                <div class="page-item" v-bind:class="{ disabled: listPage === totalListPages}" v-if="totalListPages > 1">
+                    <a class="page-link" href="#" v-bind:aria-disabled="listPage === totalListPages" v-on:click="onNextPageClick" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -86,9 +95,7 @@
     <script src="~/lib/vue/vue.global.prod.js"></script>
     <script src="~/js/vm/searchable-list-component.js"></script>
     <script>
-
-        bookListingsComponent = {};
-        $.extend(bookListingsComponent, searchableListComponent);
+        bookListingsComponent = { ...searchableListComponent };
         const bookListingsVm = Vue.createApp(bookListingsComponent).mount('#browse-community-books');
         bookListingsVm.updateListItems(1, @Json.Serialize(Model.PooledBooks));
         bookListingsVm.apiUrl = "/api/pooledbook?community=@Model.CommunityGroup.Id&";
@@ -96,8 +103,7 @@
         bookListingsVm.listPageSize = @Model.BookListingsPerPage;
         bookListingsVm.changePage(1);
 
-        memberListingsComponent = {};
-        $.extend(memberListingsComponent, searchableListComponent);
+        memberListingsComponent = { ...searchableListComponent };
         const memberListingsVm = Vue.createApp(memberListingsComponent).mount('#browse-community-members');
         memberListingsVm.updateListItems(1, @Json.Serialize(Model.Members));
         memberListingsVm.apiUrl = "/api/communitymember?community=@Model.CommunityGroup.Id&";

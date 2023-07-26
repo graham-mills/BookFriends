@@ -5,35 +5,45 @@
 
 }
 
-<div id="browse-communities" class="container">
+
+
+<div id="browse-communities">
     <h3>Browse Communities</h3>
-    <div id="browse-communities-search-input" class="container">
-        <input type="text" class="form-control" placeholder="Find a community.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
-    </div>
-    <div id="browse-communities-list" class="container">
-        <p class="text-secondary">
-            {{ statusText }}
-        </p>
-        <ul>
-            <li class="mt-3 mb-3 media" v-for="listItem in displayedListItems">
-                <img class="bf-thumb bf-thumb-l img-thumbnail mr-4" src="~/img/icon-people.svg" alt="icon-people" />
-                <div class="media-body">
-                    <a v-bind:href="'/Community/View/' + listItem.id">
-                        <h5>{{ listItem.name }}</h5>
-                    </a>
-                    <span class="badge badge-primary">{{ listItem.memberCount }} members</span>
-                    <p>{{ listItem.description }}</p>
-                </div>
-            </li>
-        </ul>
-        <div class="d-flex justify-content-center" v-if="displayLoadingSpinner">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+    <div id="browse-communities-search-input" class="row mb-3">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Find a community.." maxlength="200" v-model="searchQuery" v-on:input="onSearchInputChanged" />
+
         </div>
     </div>
-    <div id="browse-communities-next-page-button" class="container text-center">
-        <button class="btn btn-success btn-sm" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View More</button>
+    <div id="browse-communities-list" class="row">
+        <div class="col">
+            <p class="text-secondary">
+                {{ statusText }}
+            </p>
+            <ul class="p-0 list-unstyled" v-for="listItem in displayedListItems">
+                <li>
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <img class="bf-thumb bf-thumb-l img-thumbnail mr-3" src="~/img/icon-people.svg" alt="icon-people" />
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="d-inline"><a v-bind:href="'/Community/View/' + listItem.id">{{ listItem.name}}</a></h5>
+                            <img class="ms-1 d-inline-block" src="~/img/icon-people.svg" alt="icon-people" />
+                            <span title="Community members">{{ listItem.memberCount }}</span>
+                            <p>{{ listItem.description }}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="d-flex justify-content-center" v-if="displayLoadingSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div id="browse-communities-next-page-button" class="container text-center">
+            <button class="btn btn-success btn-sm" v-on:click="onNextPageClick" v-if="listPage < totalListPages">View More</button>
+        </div>
     </div>
 </div>
 

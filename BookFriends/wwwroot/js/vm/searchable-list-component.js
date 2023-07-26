@@ -1,4 +1,4 @@
-﻿let searchableListComponent = {
+﻿const searchableListComponent = {
     data() {
         return {
             pagesStored: [],
@@ -65,7 +65,7 @@
                 this.fetchSearchResults(requestedPage);
             }
         },
-        // API
+        // API - Request
         fetchData(url, responseHandler, dataHandler) {
             fetch(url, {
                 method: "GET"
@@ -104,6 +104,7 @@
                 this.fetchPage(1);
             }
         },
+        // API - Response
         handleSearchQueryResponse(response) {
             this.onFetchResponse();
             return response.json();
@@ -130,7 +131,6 @@
             this.totalListPages = Math.ceil(this.totalListItems / this.listPageSize);
             this.changePage(this.requestedListPage);
         },
-        // State changes
         onFetchingData() {
             this.displayLoadingSpinner = true;
             this.statusText = "";
@@ -138,7 +138,7 @@
         onFetchResponse() {
             this.displayLoadingSpinner = false;
         },
-        // Display
+        // Update state
         updateListItems(pageNumber, pageItems) {
             pageItems.forEach(l => this.listItems.push(l));
             this.pagesStored.push(pageNumber);
@@ -175,7 +175,7 @@
         },
         // Util
         isSearchQueryEmpty() {
-            let trimmedQuery = $.trim(this.searchQuery);
+            let trimmedQuery = this.searchQuery.trim();
             return trimmedQuery.length === 0;
         }
     },
